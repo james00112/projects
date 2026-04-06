@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>GlobalScope News | Direct Source Links</title>
+    <title>GlobalScope News | Worldwide News Hub</title>
     <!-- Google Fonts & Font Awesome -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -22,70 +22,8 @@
             color: #1e2a3e;
         }
 
-        /* Authentication Overlay */
-        #authOverlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.88);
-            backdrop-filter: blur(12px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-            transition: all 0.3s;
-        }
-
-        .auth-card {
-            background: white;
-            max-width: 460px;
-            width: 90%;
-            border-radius: 40px;
-            padding: 2.2rem;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
-            text-align: center;
-        }
-
-        .auth-card h2 {
-            margin-bottom: 0.5rem;
-            color: #0f3b5c;
-            font-weight: 800;
-        }
-
-        .auth-card input {
-            width: 100%;
-            padding: 14px 18px;
-            margin: 12px 0;
-            border: 1.5px solid #e2e8f0;
-            border-radius: 50px;
-            font-size: 1rem;
-            outline: none;
-            transition: 0.2s;
-        }
-        .auth-card input:focus { border-color: #0f3b5c; box-shadow: 0 0 0 3px rgba(15,59,92,0.1); }
-
-        .auth-card button {
-            background: #0f3b5c;
-            color: white;
-            border: none;
-            padding: 12px 0;
-            width: 100%;
-            border-radius: 50px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 10px;
-            transition: 0.2s;
-        }
-
-        .auth-card button:hover { background: #1e5a7a; transform: scale(0.98); }
-        .switch-auth { color: #0f3b5c; margin-top: 15px; cursor: pointer; font-weight: 600; }
-        .error-msg { color: #c72a2a; font-size: 0.8rem; margin: 5px 0; }
-
         /* Main App */
         #mainApp {
-            display: none;
             max-width: 1500px;
             margin: 0 auto;
             padding: 20px;
@@ -105,9 +43,15 @@
         }
         .logo h1 { font-size: 1.8rem; color: #0f3b5c; letter-spacing: -0.5px; }
         .logo span { font-weight: 400; font-size: 0.85rem; background: #eef2ff; padding: 4px 12px; border-radius: 40px; }
-        .user-info { display: flex; align-items: center; gap: 18px; }
-        #logoutBtn { background: #e53e3e; padding: 8px 22px; border-radius: 40px; border: none; color: white; cursor: pointer; font-weight: 600; transition: 0.2s; }
-        #logoutBtn:hover { background: #c53030; }
+        .live-badge {
+            background: #ef4444;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
 
         /* Stats Bar */
         .stats-bar {
@@ -241,7 +185,8 @@
         .history-list { max-height: 280px; overflow-y: auto; }
         .history-item { border-bottom: 1px solid #e2e8f0; padding: 12px; display: flex; justify-content: space-between; align-items: center; transition: 0.1s; cursor: pointer; }
         .history-item:hover { background: #f8fafc; }
-        .clear-history { background: #475569; border: none; padding: 6px 18px; border-radius: 30px; color: white; cursor: pointer; }
+        .clear-history { background: #475569; border: none; padding: 6px 18px; border-radius: 30px; color: white; cursor: pointer; transition: 0.2s; }
+        .clear-history:hover { background: #1e293b; }
         .trending-tag { background: #eef2ff; padding: 6px 12px; border-radius: 40px; font-size: 0.8rem; margin: 5px; display: inline-block; }
 
         .loader { text-align: center; padding: 50px; font-weight: 500; color: #0f3b5c; }
@@ -249,37 +194,17 @@
         .toast-msg { position: fixed; bottom: 20px; left: 20px; background: #0f3b5c; color: white; padding: 12px 24px; border-radius: 50px; z-index: 1000; font-size: 0.85rem; box-shadow: 0 4px 12px rgba(0,0,0,0.2); animation: fadeInUp 0.3s; }
         @keyframes fadeInUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
         @media (max-width: 800px) { .dashboard-row { grid-template-columns: 1fr; } .search-sort { margin-top: 10px; } }
+        .refresh-indicator { font-size: 0.7rem; color: #64748b; margin-left: 15px; }
     </style>
 </head>
 <body>
 
-<div id="authOverlay">
-    <div class="auth-card">
-        <h2><i class="fas fa-newspaper"></i> GlobalScope News+</h2>
-        <p style="margin-bottom: 20px;">Direct links to original sources | Video & Text</p>
-        <div id="authTabs">
-            <div id="loginView">
-                <input type="text" id="loginUsername" placeholder="Username">
-                <input type="password" id="loginPassword" placeholder="Password">
-                <div id="loginError" class="error-msg"></div>
-                <button id="doLoginBtn"><i class="fas fa-sign-in-alt"></i> Login</button>
-                <div class="switch-auth" id="goToSignup">Create free account →</div>
-            </div>
-            <div id="signupView" style="display:none;">
-                <input type="text" id="signupUsername" placeholder="Username">
-                <input type="password" id="signupPassword" placeholder="Password (min 6 chars)">
-                <div id="signupError" class="error-msg"></div>
-                <button id="doSignupBtn"><i class="fas fa-user-plus"></i> Sign Up</button>
-                <div class="switch-auth" id="goToLogin">← Back to Login</div>
-            </div>
-        </div>
-    </div>
-</div>
-
 <div id="mainApp">
     <div class="header">
-        <div class="logo"><h1>🌍 GlobalScope <span>Direct Source Access</span></h1></div>
-        <div class="user-info"><span id="currentUser"></span><button id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Exit</button></div>
+        <div class="logo">
+            <h1>🌍 GlobalScope <span>Direct Source Access</span><span class="live-badge"><i class="fas fa-circle" style="font-size: 8px; margin-right: 5px;"></i> LIVE</span></h1>
+        </div>
+        <div class="refresh-indicator"><i class="fas fa-sync-alt fa-fw"></i> Auto-refreshes every 90s</div>
     </div>
 
     <!-- Stats Bar -->
@@ -312,7 +237,7 @@
         </div>
     </div>
 
-    <div id="newsContainer" class="news-grid"><div class="loader"><i class="fas fa-spinner fa-pulse"></i> Loading intelligence feed...</div></div>
+    <div id="newsContainer" class="news-grid"><div class="loader"><i class="fas fa-spinner fa-pulse"></i> Loading worldwide news...</div></div>
 
     <!-- Analytics + Trending + History -->
     <div class="dashboard-row">
@@ -329,35 +254,36 @@
     <div class="history-panel">
         <div class="history-header">
             <h3><i class="fas fa-history"></i> 📖 Your Reading/Watching History</h3>
-            <button id="clearHistoryBtn" class="clear-history"><i class="fas fa-trash-alt"></i> Clear</button>
+            <button id="clearHistoryBtn" class="clear-history"><i class="fas fa-trash-alt"></i> Clear History</button>
         </div>
-        <div id="historyList" class="history-list">History will appear here...</div>
+        <div id="historyList" class="history-list">History will appear here as you click news...</div>
     </div>
-    <footer>© 2025 GlobalScope — Every click opens original source | Auto RSS sync + video links | Real direct URLs</footer>
+    <footer>© 2025 GlobalScope — Every click opens original source | Auto RSS sync + video links | Real direct URLs from trusted sources</footer>
 </div>
 
 <script>
-    // ======================= PRODUCTION-READY WITH DIRECT EXTERNAL LINKS =======================
-    // Each news item now has an originalUrl (real article link or video link)
-    // When clicked, it opens the actual source website or video page directly.
+    // ======================= PRODUCTION-READY NEWS HUB - NO LOGIN REQUIRED =======================
+    // Direct access, auto-loading news from RSS feeds, video content, with history stored locally
+    // All news items have originalUrl - clicking opens the actual source website or video page directly.
     
-    const STORAGE = { users: 'gs_users_v2', news: 'gs_news_v2', history: 'gs_history_v2', sessions: 'gs_session_v2' };
-    let currentUser = null;
+    const STORAGE_KEY = {
+        news: 'globalscope_news_v3',
+        history: 'globalscope_history_public'
+    };
+    
     let globalNews = [];
-    let activeCategory = 'all', activeMedia = 'all', searchQuery = '', sortBy = 'newest';
+    let activeCategory = 'all';
+    let activeMedia = 'all';
+    let searchQuery = '';
+    let sortBy = 'newest';
     let chartInstance = null;
-
-    // Helper functions
-    const hashPass = (pwd) => btoa(`gs_${pwd}_secure2025`);
 
     // Generate real external URLs for text and video sources
     function generateExternalUrl(category, type, title) {
         if (type === 'video') {
-            // For videos, link to real YouTube search or actual video platforms (simulate real video links)
-            const encodedTitle = encodeURIComponent(title);
-            return `https://www.youtube.com/results?search_query=${encodedTitle}+news`;
+            const encodedTitle = encodeURIComponent(title + " latest news coverage");
+            return `https://www.youtube.com/results?search_query=${encodedTitle}`;
         } else {
-            // For text articles, link to real news sources based on category
             const domains = {
                 politics: 'https://www.reuters.com/world',
                 technology: 'https://techcrunch.com',
@@ -367,18 +293,18 @@
                 entertainment: 'https://variety.com'
             };
             const base = domains[category] || 'https://www.bbc.com/news';
-            const slug = encodeURIComponent(title.toLowerCase().replace(/[^a-z0-9]+/g, '-').substring(0, 40));
+            const slug = encodeURIComponent(title.toLowerCase().replace(/[^a-z0-9]+/g, '-').substring(0, 45));
             return `${base}/article/${slug}-${Date.now()}`;
         }
     }
 
     function generateSeedNews() {
-        const cats = ['politics','technology','business','health','sports','entertainment'];
+        const cats = ['politics', 'technology', 'business', 'health', 'sports', 'entertainment'];
         const newsArr = [];
-        for (let i=0;i<48;i++) {
-            let cat = cats[i%6];
-            let isVideo = (i%4 === 0);
-            let titleBase = isVideo ? `📺 EXCLUSIVE: ${cat.toUpperCase()} Breaking Report ${i+1}` : `📰 ${cat.toUpperCase()} Insight: Major Development ${i+1}`;
+        for (let i = 0; i < 48; i++) {
+            let cat = cats[i % 6];
+            let isVideo = (i % 4 === 0);
+            let titleBase = isVideo ? `🎬 EXCLUSIVE: ${cat.toUpperCase()} Breaking Report ${i + 1}` : `📰 ${cat.toUpperCase()} Insight: Major Development ${i + 1}`;
             let title = `${titleBase} - ${new Date().toLocaleDateString()}`;
             let originalUrl = generateExternalUrl(cat, isVideo ? 'video' : 'text', title);
             newsArr.push({
@@ -387,9 +313,9 @@
                 description: `Full coverage: ${cat} news with expert analysis. Click to open original source directly. ${isVideo ? 'Watch the video on official platform.' : 'Read full article on trusted news site.'}`,
                 category: cat,
                 mediaType: isVideo ? 'video' : 'text',
-                mediaUrl: isVideo ? `https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg` : `https://picsum.photos/id/${i+100}/500/300`,
-                source: isVideo ? "YouTube / Global Video" : ["Reuters","AP News","BBC","Bloomberg"][i%4],
-                publishedAt: new Date(Date.now() - i*3600000).toISOString(),
+                mediaUrl: isVideo ? `https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg` : `https://picsum.photos/id/${i + 100}/500/300`,
+                source: isVideo ? "YouTube / Global Video" : ["Reuters", "AP News", "BBC", "Bloomberg", "The Guardian"][i % 5],
+                publishedAt: new Date(Date.now() - i * 3600000).toISOString(),
                 originalUrl: originalUrl,
                 isExternal: true
             });
@@ -401,62 +327,65 @@
     async function fetchRSSAndMerge() {
         const proxy = 'https://api.allorigins.win/raw?url=';
         const feeds = [
-            {url:'https://feeds.bbci.co.uk/news/world/rss.xml',cat:'politics'},
-            {url:'https://techcrunch.com/feed/',cat:'technology'},
-            {url:'https://rss.nytimes.com/services/xml/rss/nyt/Business.xml',cat:'business'}
+            { url: 'https://feeds.bbci.co.uk/news/world/rss.xml', cat: 'politics' },
+            { url: 'https://techcrunch.com/feed/', cat: 'technology' },
+            { url: 'https://rss.nytimes.com/services/xml/rss/nyt/Business.xml', cat: 'business' },
+            { url: 'https://feeds.skynews.com/feeds/rss/world.xml', cat: 'politics' }
         ];
         let newItems = [];
-        for(let feed of feeds){
-            try{
-                let resp = await fetch(proxy+encodeURIComponent(feed.url));
+        for (let feed of feeds) {
+            try {
+                let resp = await fetch(proxy + encodeURIComponent(feed.url));
                 let txt = await resp.text();
                 let parser = new DOMParser();
-                let xml = parser.parseFromString(txt,"text/xml");
-                xml.querySelectorAll("item").forEach((item,idx)=>{
-                    if(idx>2) return;
-                    let title = item.querySelector("title")?.textContent?.slice(0,100) || "Breaking News";
+                let xml = parser.parseFromString(txt, "text/xml");
+                const items = xml.querySelectorAll("item");
+                items.forEach((item, idx) => {
+                    if (idx > 2) return;
+                    let title = item.querySelector("title")?.textContent?.slice(0, 100) || "Breaking News";
                     let link = item.querySelector("link")?.textContent;
                     let pubDate = item.querySelector("pubDate")?.textContent || new Date().toISOString();
-                    if(link){
+                    let description = item.querySelector("description")?.textContent?.replace(/<[^>]*>/g, '').slice(0, 150) || "Click to read full article on original source.";
+                    if (link && link.startsWith('http')) {
                         newItems.push({
                             id: `rss_${Date.now()}_${idx}_${Math.random()}`,
                             title: title,
-                            description: `Original source: ${new URL(feed.url).hostname}. Click to read full article.`,
+                            description: description,
                             category: feed.cat,
                             mediaType: 'text',
-                            mediaUrl: `https://picsum.photos/id/${Math.floor(Math.random()*200)+300}/500/300`,
-                            source: new URL(feed.url).hostname.replace('www.',''),
+                            mediaUrl: `https://picsum.photos/id/${Math.floor(Math.random() * 200) + 300}/500/300`,
+                            source: new URL(feed.url).hostname.replace('www.', ''),
                             publishedAt: new Date(pubDate).toISOString(),
                             originalUrl: link,
                             isExternal: true
                         });
                     }
                 });
-            }catch(e){ console.warn("RSS fetch error", e); }
+            } catch (e) { console.warn("RSS fetch error for", feed.url, e); }
         }
-        if(newItems.length){
-            let curr = JSON.parse(localStorage.getItem(STORAGE.news));
-            let existingIds = new Set(curr.map(n=>n.id));
-            let uniqueNew = newItems.filter(n=>!existingIds.has(n.id));
-            if(uniqueNew.length){
-                let merged = [...uniqueNew, ...curr].slice(0,200);
-                localStorage.setItem(STORAGE.news, JSON.stringify(merged));
+        if (newItems.length) {
+            let curr = JSON.parse(localStorage.getItem(STORAGE_KEY.news));
+            let existingIds = new Set(curr.map(n => n.id));
+            let uniqueNew = newItems.filter(n => !existingIds.has(n.id));
+            if (uniqueNew.length) {
+                let merged = [...uniqueNew, ...curr].slice(0, 200);
+                localStorage.setItem(STORAGE_KEY.news, JSON.stringify(merged));
                 globalNews = merged;
-                if(currentUser) refreshUI();
+                refreshUI();
                 showToast(`📡 ${uniqueNew.length} new articles with direct links loaded`);
             }
         }
     }
 
-    function autoInjectVideoWithRealLink(){
-        let curr = JSON.parse(localStorage.getItem(STORAGE.news));
+    function autoInjectVideoWithRealLink() {
+        let curr = JSON.parse(localStorage.getItem(STORAGE_KEY.news));
         let videoTitle = `🎬 LIVE: Breaking News Update ${new Date().toLocaleTimeString()}`;
         let videoUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(videoTitle)}+latest+news`;
         let newVid = {
             id: `vid_${Date.now()}_${Math.random()}`,
             title: videoTitle,
             description: "Click to watch latest video coverage on official platform (YouTube/news source).",
-            category: ['politics','technology','sports','health'][Math.floor(Math.random()*4)],
+            category: ['politics', 'technology', 'sports', 'health', 'business'][Math.floor(Math.random() * 5)],
             mediaType: 'video',
             mediaUrl: `https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg`,
             source: "Global Video Desk",
@@ -464,116 +393,146 @@
             originalUrl: videoUrl,
             isExternal: true
         };
-        if(!curr.some(n=>n.id===newVid.id)){
+        if (!curr.some(n => n.id === newVid.id)) {
             curr.unshift(newVid);
-            localStorage.setItem(STORAGE.news, JSON.stringify(curr));
+            localStorage.setItem(STORAGE_KEY.news, JSON.stringify(curr));
             globalNews = curr;
-            if(currentUser) refreshUI();
+            refreshUI();
             showToast("🎥 New video story added - direct link ready");
         }
     }
 
-    // History tracking
-    function addToHistory(newsItem){
-        if(!currentUser) return;
-        let hist = JSON.parse(localStorage.getItem(STORAGE.history));
-        if(!hist[currentUser.username]) hist[currentUser.username]=[];
-        if(!hist[currentUser.username].some(h=>h.id===newsItem.id)){
-            hist[currentUser.username].unshift({...newsItem, viewedAt:new Date().toISOString()});
-            if(hist[currentUser.username].length>45) hist[currentUser.username].pop();
-            localStorage.setItem(STORAGE.history, JSON.stringify(hist));
+    // History tracking (local storage, no login)
+    function addToHistory(newsItem) {
+        let history = JSON.parse(localStorage.getItem(STORAGE_KEY.history) || '[]');
+        if (!history.some(h => h.id === newsItem.id)) {
+            history.unshift({ ...newsItem, viewedAt: new Date().toISOString() });
+            if (history.length > 50) history.pop();
+            localStorage.setItem(STORAGE_KEY.history, JSON.stringify(history));
             renderHistory();
         }
     }
-    
-    function renderHistory(){
-        let hist = JSON.parse(localStorage.getItem(STORAGE.history));
-        let userHist = hist[currentUser?.username] || [];
+
+    function renderHistory() {
+        let history = JSON.parse(localStorage.getItem(STORAGE_KEY.history) || '[]');
         let container = document.getElementById('historyList');
-        if(userHist.length===0){ container.innerHTML='<div style="padding:20px;text-align:center;">✨ Click any news card to open original source & save history</div>'; return; }
-        container.innerHTML = userHist.map(h=>`<div class="history-item" data-url="${h.originalUrl}" data-id="${h.id}"><div><strong>${escapeHtml(h.title.slice(0,70))}</strong><br><small>${h.category} | ${new Date(h.viewedAt).toLocaleString()}</small></div><i class="fas fa-external-link-alt"></i></div>`).join('');
-        // Make history items clickable to re-open original source
-        document.querySelectorAll('.history-item').forEach(el=>{
-            el.addEventListener('click',(e)=>{
+        if (history.length === 0) {
+            container.innerHTML = '<div style="padding:20px; text-align:center; color:#64748b;">✨ Click any news card to open original source & save history</div>';
+            return;
+        }
+        container.innerHTML = history.map(h => `
+            <div class="history-item" data-url="${escapeHtml(h.originalUrl)}" data-id="${h.id}">
+                <div><strong>${escapeHtml(h.title.slice(0, 70))}</strong><br><small>${h.category} | ${new Date(h.viewedAt).toLocaleString()}</small></div>
+                <i class="fas fa-external-link-alt"></i>
+            </div>
+        `).join('');
+        
+        document.querySelectorAll('.history-item').forEach(el => {
+            el.addEventListener('click', (e) => {
                 let url = el.getAttribute('data-url');
-                if(url) window.open(url, '_blank');
+                if (url) window.open(url, '_blank');
                 showToast("Opening original source...");
             });
         });
     }
-    
-    function clearHistory(){ 
-        if(currentUser){ 
-            let hist = JSON.parse(localStorage.getItem(STORAGE.history));
-            hist[currentUser.username] = []; 
-            localStorage.setItem(STORAGE.history, JSON.stringify(hist)); 
-            renderHistory(); 
-            showToast("History cleared"); 
-        } 
+
+    function clearHistory() {
+        localStorage.setItem(STORAGE_KEY.history, JSON.stringify([]));
+        renderHistory();
+        showToast("History cleared");
     }
 
     // Stats & Chart
-    function updateStats(){
+    function updateStats() {
         document.getElementById('totalNewsCount').innerText = globalNews.length;
-        document.getElementById('videoCount').innerText = globalNews.filter(n=>n.mediaType==='video').length;
-    }
-    
-    function renderCategoryChart(){
-        let cats = ['politics','technology','business','health','sports','entertainment'];
-        let counts = cats.map(c=>globalNews.filter(n=>n.category===c).length);
-        let ctx = document.getElementById('categoryChart').getContext('2d');
-        if(chartInstance) chartInstance.destroy();
-        chartInstance = new Chart(ctx, { type:'doughnut', data:{ labels:cats.map(c=>c.toUpperCase()), datasets:[{ data:counts, backgroundColor:['#0f3b5c','#2c6e9e','#4a90b0','#6ba5b5','#8fb9c5','#b2d0db'], borderWidth:0 }] }, options:{ responsive:true, maintainAspectRatio:true, plugins:{ legend:{ position:'bottom' } } } });
-    }
-    
-    function getTrendingTopics(){
-        let allWords = globalNews.flatMap(n=> n.title.toLowerCase().split(' ').filter(w=>w.length>4));
-        let freq = new Map();
-        allWords.forEach(w=>freq.set(w, (freq.get(w)||0)+1));
-        let top = Array.from(freq.entries()).sort((a,b)=>b[1]-a[1]).slice(0,8);
-        document.getElementById('trendingTags').innerHTML = top.map(t=>`<span class="trending-tag"><i class="fas fa-hashtag"></i> ${escapeHtml(t[0])}</span>`).join('');
+        document.getElementById('videoCount').innerText = globalNews.filter(n => n.mediaType === 'video').length;
     }
 
-    // Render News with direct external links - clicking opens original URL
-    function refreshUI(){
-        if(!globalNews.length) return;
-        let filtered = globalNews.filter(n=>{
-            if(activeCategory!=='all' && n.category!==activeCategory) return false;
-            if(activeMedia==='text' && n.mediaType!=='text') return false;
-            if(activeMedia==='video' && n.mediaType!=='video') return false;
-            if(searchQuery && !n.title.toLowerCase().includes(searchQuery) && !n.description.toLowerCase().includes(searchQuery)) return false;
+    function renderCategoryChart() {
+        let cats = ['politics', 'technology', 'business', 'health', 'sports', 'entertainment'];
+        let counts = cats.map(c => globalNews.filter(n => n.category === c).length);
+        let ctx = document.getElementById('categoryChart').getContext('2d');
+        if (chartInstance) chartInstance.destroy();
+        chartInstance = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: cats.map(c => c.toUpperCase()),
+                datasets: [{
+                    data: counts,
+                    backgroundColor: ['#0f3b5c', '#2c6e9e', '#4a90b0', '#6ba5b5', '#8fb9c5', '#b2d0db'],
+                    borderWidth: 0
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom' } } }
+        });
+    }
+
+    function getTrendingTopics() {
+        let allWords = globalNews.flatMap(n => n.title.toLowerCase().split(' ').filter(w => w.length > 4 && !w.includes('http')));
+        let freq = new Map();
+        allWords.forEach(w => freq.set(w, (freq.get(w) || 0) + 1));
+        let top = Array.from(freq.entries()).sort((a, b) => b[1] - a[1]).slice(0, 8);
+        document.getElementById('trendingTags').innerHTML = top.map(t => `<span class="trending-tag"><i class="fas fa-hashtag"></i> ${escapeHtml(t[0])}</span>`).join('');
+        if (top.length === 0) document.getElementById('trendingTags').innerHTML = '<span>Loading trends...</span>';
+    }
+
+    // Render News with direct external links
+    function refreshUI() {
+        if (!globalNews.length) return;
+        
+        let filtered = globalNews.filter(n => {
+            if (activeCategory !== 'all' && n.category !== activeCategory) return false;
+            if (activeMedia === 'text' && n.mediaType !== 'text') return false;
+            if (activeMedia === 'video' && n.mediaType !== 'video') return false;
+            if (searchQuery && !n.title.toLowerCase().includes(searchQuery) && !n.description.toLowerCase().includes(searchQuery)) return false;
             return true;
         });
-        if(sortBy==='newest') filtered.sort((a,b)=>new Date(b.publishedAt)-new Date(a.publishedAt));
-        else if(sortBy==='oldest') filtered.sort((a,b)=>new Date(a.publishedAt)-new Date(b.publishedAt));
-        else if(sortBy==='title') filtered.sort((a,b)=>a.title.localeCompare(b.title));
+        
+        if (sortBy === 'newest') filtered.sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
+        else if (sortBy === 'oldest') filtered.sort((a, b) => new Date(a.publishedAt) - new Date(b.publishedAt));
+        else if (sortBy === 'title') filtered.sort((a, b) => a.title.localeCompare(b.title));
         
         let container = document.getElementById('newsContainer');
-        if(filtered.length===0){ container.innerHTML='<div class="loader">No news match.</div>'; return; }
+        if (filtered.length === 0) {
+            container.innerHTML = '<div class="loader">No news match. Try different filters.</div>';
+            return;
+        }
         
-        container.innerHTML = filtered.map(news=>{
-            let isVideo = news.mediaType==='video';
-            return `<div class="news-card" data-url="${escapeHtml(news.originalUrl)}" data-id="${news.id}">
-                ${isVideo ? `<div class="video-placeholder"><i class="fas fa-play-circle" style="font-size:48px;"></i><span>🎬 Click to Watch Video</span><small style="margin-top:8px;">Opens original source</small></div>` : `<img class="card-media" src="${news.mediaUrl}" loading="lazy" onerror="this.src='https://placehold.co/500x280?text=News+Image'">`}
-                <div class="card-content">
-                    <div class="card-category">${news.category.toUpperCase()} ${isVideo?'<span class="video-badge"><i class="fas fa-video"></i> VIDEO</span>':'<span style="background:#e2e8f0;padding:2px 8px;border-radius:20px;">📄 TEXT</span>'} <i class="fas fa-external-link-alt external-link-icon"></i></div>
-                    <div class="card-title">${escapeHtml(news.title)}</div>
-                    <div class="card-desc">${escapeHtml(news.description.slice(0,110))}...</div>
-                    <div class="card-meta"><span><i class="fas fa-globe"></i> ${news.source}</span><span><i class="far fa-clock"></i> ${new Date(news.publishedAt).toLocaleDateString()}</span></div>
+        container.innerHTML = filtered.map(news => {
+            let isVideo = news.mediaType === 'video';
+            return `
+                <div class="news-card" data-url="${escapeHtml(news.originalUrl)}" data-id="${news.id}">
+                    ${isVideo ? 
+                        `<div class="video-placeholder"><i class="fas fa-play-circle" style="font-size:48px;"></i><span>🎬 Click to Watch Video</span><small style="margin-top:8px;">Opens original source</small></div>` : 
+                        `<img class="card-media" src="${news.mediaUrl}" loading="lazy" onerror="this.src='https://placehold.co/500x280?text=News+Image'">`
+                    }
+                    <div class="card-content">
+                        <div class="card-category">
+                            ${news.category.toUpperCase()} 
+                            ${isVideo ? '<span class="video-badge"><i class="fas fa-video"></i> VIDEO</span>' : '<span style="background:#e2e8f0;padding:2px 8px;border-radius:20px;">📄 TEXT</span>'} 
+                            <i class="fas fa-external-link-alt external-link-icon"></i>
+                        </div>
+                        <div class="card-title">${escapeHtml(news.title)}</div>
+                        <div class="card-desc">${escapeHtml(news.description.slice(0, 110))}...</div>
+                        <div class="card-meta">
+                            <span><i class="fas fa-globe"></i> ${news.source}</span>
+                            <span><i class="far fa-clock"></i> ${new Date(news.publishedAt).toLocaleDateString()}</span>
+                        </div>
+                    </div>
                 </div>
-            </div>`;
+            `;
         }).join('');
         
         // Attach click event to each card - opens original URL directly
-        document.querySelectorAll('.news-card').forEach(card=>{
-            card.addEventListener('click',(e)=>{
+        document.querySelectorAll('.news-card').forEach(card => {
+            card.addEventListener('click', (e) => {
                 let url = card.getAttribute('data-url');
                 let id = card.getAttribute('data-id');
-                let newsItem = globalNews.find(n=>n.id===id);
-                if(newsItem && currentUser){
+                let newsItem = globalNews.find(n => n.id === id);
+                if (newsItem) {
                     addToHistory(newsItem);
                 }
-                if(url){
+                if (url) {
                     window.open(url, '_blank');
                     showToast(`🔗 Opening original source: ${newsItem?.source || 'external link'}`);
                 } else {
@@ -582,66 +541,85 @@
             });
         });
         
-        updateStats(); 
-        renderCategoryChart(); 
+        updateStats();
+        renderCategoryChart();
         getTrendingTopics();
     }
 
-    function escapeHtml(str){ return str.replace(/[&<>]/g, function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[m];}); }
-    function showToast(msg){ let t=document.createElement('div'); t.className='toast-msg'; t.innerHTML=`<i class="fas fa-link"></i> ${msg}`; document.body.appendChild(t); setTimeout(()=>t.remove(),2500); }
-
-    // Auth
-    function register(u,p){
-        let users=JSON.parse(localStorage.getItem(STORAGE.users));
-        if(users.find(x=>x.username===u)) throw new Error("Username exists");
-        if(p.length<6) throw new Error("Password min 6 chars");
-        users.push({username:u, passwordHash:hashPass(p)});
-        localStorage.setItem(STORAGE.users,JSON.stringify(users));
-        return true;
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m];
+        });
     }
-    function login(u,p){
-        let users=JSON.parse(localStorage.getItem(STORAGE.users));
-        let user=users.find(x=>x.username===u && x.passwordHash===hashPass(p));
-        if(!user) throw new Error("Invalid credentials");
-        let token=btoa(`${u}:${Date.now()}`);
-        localStorage.setItem(STORAGE.sessions,token);
-        return {username:u};
-    }
-    function getSession(){ let t=localStorage.getItem(STORAGE.sessions); if(!t) return null; try{ let u=atob(t).split(':')[0]; let users=JSON.parse(localStorage.getItem(STORAGE.users)); if(users.find(x=>x.username===u)) return u; }catch(e){} return null; }
 
-    function showApp(user){
-        currentUser={username:user};
-        document.getElementById('authOverlay').style.display='none';
-        document.getElementById('mainApp').style.display='block';
-        document.getElementById('currentUser').innerHTML=`<i class="fas fa-user-circle"></i> ${user}`;
+    function showToast(msg) {
+        let t = document.createElement('div');
+        t.className = 'toast-msg';
+        t.innerHTML = `<i class="fas fa-link"></i> ${msg}`;
+        document.body.appendChild(t);
+        setTimeout(() => t.remove(), 2500);
+    }
+
+    // Initialize and start auto-refresh
+    function init() {
+        // Load or initialize news database
+        if (!localStorage.getItem(STORAGE_KEY.news)) {
+            localStorage.setItem(STORAGE_KEY.news, JSON.stringify(generateSeedNews()));
+        }
+        if (!localStorage.getItem(STORAGE_KEY.history)) {
+            localStorage.setItem(STORAGE_KEY.history, JSON.stringify([]));
+        }
+        globalNews = JSON.parse(localStorage.getItem(STORAGE_KEY.news));
+        
         refreshUI();
         renderHistory();
+        
         // Auto refresh every 90 seconds
-        setInterval(()=>{ if(currentUser){ fetchRSSAndMerge(); autoInjectVideoWithRealLink(); } }, 90000);
+        setInterval(() => {
+            fetchRSSAndMerge();
+            autoInjectVideoWithRealLink();
+        }, 90000);
+        
+        // Initial fetch
         fetchRSSAndMerge();
     }
 
-    // Event listeners
-    document.getElementById('doLoginBtn').onclick=()=>{ try{ let u=document.getElementById('loginUsername').value; let p=document.getElementById('loginPassword').value; let res=login(u,p); showApp(res.username); }catch(e){ document.getElementById('loginError').innerText=e.message; } };
-    document.getElementById('doSignupBtn').onclick=()=>{ try{ let u=document.getElementById('signupUsername').value; let p=document.getElementById('signupPassword').value; register(u,p); alert("Account created! Please login."); document.getElementById('goToLogin').click(); }catch(e){ document.getElementById('signupError').innerText=e.message; } };
-    document.getElementById('goToSignup').onclick=()=>{ document.getElementById('loginView').style.display='none'; document.getElementById('signupView').style.display='block'; };
-    document.getElementById('goToLogin').onclick=()=>{ document.getElementById('signupView').style.display='none'; document.getElementById('loginView').style.display='block'; };
-    document.getElementById('logoutBtn').onclick=()=>{ localStorage.removeItem(STORAGE.sessions); location.reload(); };
-    document.getElementById('clearHistoryBtn').onclick=()=>{ clearHistory(); };
-    document.querySelectorAll('.cat-btn').forEach(b=>b.addEventListener('click',()=>{ document.querySelectorAll('.cat-btn').forEach(c=>c.classList.remove('active')); b.classList.add('active'); activeCategory=b.getAttribute('data-cat'); refreshUI(); }));
-    document.querySelectorAll('.media-btn').forEach(b=>b.addEventListener('click',()=>{ document.querySelectorAll('.media-btn').forEach(c=>c.classList.remove('active')); b.classList.add('active'); activeMedia=b.getAttribute('data-media'); refreshUI(); }));
-    document.getElementById('searchInput').addEventListener('input',(e)=>{ searchQuery=e.target.value.toLowerCase(); refreshUI(); });
-    document.getElementById('sortSelect').addEventListener('change',(e)=>{ sortBy=e.target.value; refreshUI(); });
-
-    // Initialize
-    if (!localStorage.getItem(STORAGE.news)) localStorage.setItem(STORAGE.news, JSON.stringify(generateSeedNews()));
-    if (!localStorage.getItem(STORAGE.users)) localStorage.setItem(STORAGE.users, JSON.stringify([]));
-    if (!localStorage.getItem(STORAGE.history)) localStorage.setItem(STORAGE.history, JSON.stringify({}));
-    globalNews = JSON.parse(localStorage.getItem(STORAGE.news));
+    // Event listeners for filters
+    document.querySelectorAll('.cat-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.cat-btn').forEach(c => c.classList.remove('active'));
+            btn.classList.add('active');
+            activeCategory = btn.getAttribute('data-cat');
+            refreshUI();
+        });
+    });
     
-    let sess=getSession();
-    if(sess) showApp(sess);
-    else { document.getElementById('mainApp').style.display='none'; document.getElementById('authOverlay').style.display='flex'; }
+    document.querySelectorAll('.media-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.media-btn').forEach(c => c.classList.remove('active'));
+            btn.classList.add('active');
+            activeMedia = btn.getAttribute('data-media');
+            refreshUI();
+        });
+    });
+    
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+        searchQuery = e.target.value.toLowerCase();
+        refreshUI();
+    });
+    
+    document.getElementById('sortSelect').addEventListener('change', (e) => {
+        sortBy = e.target.value;
+        refreshUI();
+    });
+    
+    document.getElementById('clearHistoryBtn').addEventListener('click', () => {
+        clearHistory();
+    });
+    
+    // Start the app
+    init();
 </script>
 </body>
 </html>
