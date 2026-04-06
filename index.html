@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>WorldView | Global News Hub — Accurate Live TV Links</title>
+    <title>WorldView | Live TV Preview — Global News Hub</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -35,38 +35,58 @@
         .news-card { background: white; overflow: hidden; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.08); border: 1px solid #eef2f6; transition: 0.25s; position: relative; }
         .news-card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.08); border-color: #cc000030; }
         .card-media { width: 100%; height: 200px; object-fit: cover; background: #eef2f6; }
-        .video-placeholder { background: #1e2a3a; height: 200px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; gap: 10px; }
-        .bookmark-icon { position: absolute; top: 12px; right: 12px; background: rgba(255,255,255,0.95); width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10; color: #8a9bb0; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .video-preview-container { position: relative; height: 200px; background: #0a0a0a; overflow: hidden; cursor: pointer; }
+        .video-preview-container iframe { width: 100%; height: 100%; border: none; pointer-events: none; }
+        .video-preview-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+        .video-preview-container:hover .video-preview-overlay { background: rgba(0,0,0,0.2); }
+        .play-icon { width: 60px; height: 60px; background: #cc0000; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.8rem; box-shadow: 0 4px 15px rgba(0,0,0,0.3); transition: 0.2s; }
+        .play-icon:hover { transform: scale(1.1); background: #ff1a1a; }
+        .live-tag { position: absolute; top: 10px; left: 10px; background: #cc0000; color: white; padding: 3px 10px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; z-index: 2; display: flex; align-items: center; gap: 5px; }
+        .live-tag i { font-size: 8px; animation: pulseRed 1s infinite; }
+        @keyframes pulseRed { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .bookmark-icon { position: absolute; top: 12px; right: 12px; background: rgba(255,255,255,0.95); width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10; color: #8a9bb0; box-shadow: 0 1px 3px rgba(0,0,0,0.1); transition: 0.2s; }
         .bookmark-icon.bookmarked { color: #cc0000; }
         .card-content { padding: 20px; }
         .card-badges { display: flex; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
         .badge-country { font-size: 0.7rem; font-weight: 600; color: #cc0000; text-transform: uppercase; }
-        .badge-type { font-size: 0.7rem; font-weight: 500; color: #5a6874; background: #f1f5f9; padding: 2px 8px; }
+        .badge-type { font-size: 0.7rem; font-weight: 500; color: #5a6874; background: #f1f5f9; padding: 2px 8px; border-radius: 4px; }
         .card-title { font-size: 1.2rem; font-weight: 700; line-height: 1.35; margin-bottom: 12px; color: #1a2c3e; }
         .card-desc { font-size: 0.85rem; color: #4a5a6a; line-height: 1.5; margin-bottom: 16px; }
         .card-footer { display: flex; justify-content: space-between; font-size: 0.7rem; color: #8a9bb0; border-top: 1px solid #eef2f6; padding-top: 14px; }
         .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 28px; margin: 32px 0; }
         .dashboard-card { background: white; padding: 20px; border: 1px solid #eef2f6; }
         .dashboard-card h3 { font-size: 1.1rem; font-weight: 700; border-left: 4px solid #cc0000; padding-left: 12px; margin-bottom: 16px; }
-        .tv-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; max-height: 320px; overflow-y: auto; }
-        .tv-channel { background: #f8fafc; padding: 10px 14px; display: flex; align-items: center; gap: 12px; cursor: pointer; border: 1px solid #eef2f6; transition: 0.2s; }
+        .tv-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; max-height: 340px; overflow-y: auto; }
+        .tv-channel { background: #f8fafc; padding: 10px 14px; display: flex; align-items: center; gap: 12px; cursor: pointer; border: 1px solid #eef2f6; transition: 0.2s; position: relative; }
         .tv-channel:hover { background: #f1f5f9; border-left: 3px solid #cc0000; }
+        .tv-channel .preview-icon { color: #cc0000; font-size: 1.2rem; }
         .history-section, .bookmarks-section { background: white; padding: 20px; margin-top: 24px; border: 1px solid #eef2f6; }
         .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .clear-btn { background: #f1f5f9; border: none; padding: 6px 16px; font-size: 0.75rem; cursor: pointer; }
+        .clear-btn { background: #f1f5f9; border: none; padding: 6px 16px; font-size: 0.75rem; cursor: pointer; border-radius: 4px; }
+        .clear-btn:hover { background: #e2e8f0; }
         .history-list, .bookmarks-list { max-height: 260px; overflow-y: auto; }
         .history-item, .bookmark-item { padding: 12px; border-bottom: 1px solid #eef2f6; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
         .history-item:hover, .bookmark-item:hover { background: #fafcff; }
-        .toast { position: fixed; bottom: 24px; left: 24px; background: #1a2c3e; color: white; padding: 12px 24px; font-size: 0.85rem; z-index: 2000; animation: slideUp 0.3s ease; }
+        .toast { position: fixed; bottom: 24px; left: 24px; background: #1a2c3e; color: white; padding: 12px 24px; font-size: 0.85rem; z-index: 2000; animation: slideUp 0.3s ease; border-radius: 8px; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .modal-preview { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.9); z-index: 3000; display: flex; align-items: center; justify-content: center; animation: fadeIn 0.2s; }
+        .modal-content { width: 90%; max-width: 1000px; background: #000; border-radius: 12px; overflow: hidden; }
+        .modal-header { background: #1a2c3e; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; color: white; }
+        .modal-header h3 { margin: 0; }
+        .modal-close { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; padding: 0 10px; }
+        .modal-close:hover { color: #cc0000; }
+        .modal-video { position: relative; padding-bottom: 56.25%; height: 0; }
+        .modal-video iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         footer { text-align: center; margin-top: 48px; padding: 24px; font-size: 0.75rem; color: #8a9bb0; border-top: 1px solid #e2e8f0; }
-        @media (max-width: 640px) { #app { padding: 0 16px 16px; } .news-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 640px) { #app { padding: 0 16px 16px; } .news-grid { grid-template-columns: 1fr; } .modal-content { width: 95%; } }
+        .loader { text-align: center; padding: 60px; color: #5a6874; }
     </style>
 </head>
 <body>
 <div id="app">
     <div class="header">
-        <div class="logo"><i class="fas fa-newspaper" style="font-size: 1.8rem; color: #cc0000;"></i><h1>WORLD<span>VIEW</span></h1><div class="live-badge"><i class="fas fa-circle" style="font-size: 8px;"></i> LIVE · ACCURATE STREAMS</div></div>
+        <div class="logo"><i class="fas fa-newspaper" style="font-size: 1.8rem; color: #cc0000;"></i><h1>WORLD<span>VIEW</span></h1><div class="live-badge"><i class="fas fa-circle" style="font-size: 8px;"></i> LIVE PREVIEW</div></div>
         <div id="liveDate" style="font-size:0.8rem; color:#5a6874;"></div>
     </div>
     <div class="stats-grid">
@@ -87,137 +107,116 @@
         <div class="search-wrapper"><i class="fas fa-search"></i><input type="text" id="searchInput" placeholder="Search country, source..."></div>
     </div>
     <div class="country-scroll-container"><div class="country-scroll" id="countryScrollList"></div></div>
-    <div id="newsContainer" class="news-grid"><div class="loader" style="text-align:center; padding:60px;">Loading global news...</div></div>
+    <div id="newsContainer" class="news-grid"><div class="loader"><i class="fas fa-spinner fa-pulse"></i> Loading global news...</div></div>
     <div class="dashboard">
         <div class="dashboard-card"><h3><i class="fas fa-chart-pie"></i> NEWS DISTRIBUTION</h3><canvas id="categoryChart" height="200"></canvas></div>
-        <div class="dashboard-card"><h3><i class="fas fa-tv"></i> LIVE TV CHANNELS (ACCURATE LINKS)</h3><div id="tvGlobalList" class="tv-list">Loading...</div></div>
+        <div class="dashboard-card"><h3><i class="fas fa-tv"></i> LIVE TV CHANNELS (PREVIEW AVAILABLE)</h3><div id="tvGlobalList" class="tv-list">Loading...</div></div>
     </div>
     <div class="bookmarks-section"><div class="section-header"><h3><i class="fas fa-bookmark"></i> SAVED STORIES</h3><button id="clearBookmarksBtn" class="clear-btn">CLEAR ALL</button></div><div id="bookmarksList" class="bookmarks-list"></div></div>
     <div class="history-section"><div class="section-header"><h3><i class="fas fa-history"></i> RECENTLY VIEWED</h3><button id="clearHistoryBtn" class="clear-btn">CLEAR</button></div><div id="historyList" class="history-list"></div></div>
-    <footer>© WORLDVIEW — ACCURATE LIVE LINKS: /live, /watch-live, /en-direct, /live-tv, /on-air | All links open official streams</footer>
+    <footer>© WORLDVIEW — LIVE TV PREVIEW: Hover over video to see preview, click play icon or card to watch full stream | Accurate live links</footer>
 </div>
 
 <script>
-    // ================ PROFESSIONAL NEWS DATABASE WITH REALISTIC LIVE TV LINKS ================
-    const STORAGE = { history: 'pro_news_history_v2', bookmarks: 'pro_news_bookmarks_v2' };
+    // ================ COMPLETE DATABASE WITH LIVE TV PREVIEW (Embed support) ================
+    const STORAGE = { history: 'pro_news_history_preview', bookmarks: 'pro_news_bookmarks_preview' };
     
-    // Comprehensive TV Channels with correct live streaming URLs (using /live, /watch-live, /en-direct, /live-tv, /on-air etc)
+    // TV Channels with embed/live stream URLs for preview (using official embed or livestream domains)
     const TV_CHANNELS_DATA = [
-        { name: "CNN", country: "USA", flag: "🇺🇸", url: "https://www.cnn.com/world/live-news", category: "world" },
-        { name: "CNN International", country: "USA", flag: "🇺🇸", url: "https://edition.cnn.com/world/live-news", category: "world" },
-        { name: "Fox News", country: "USA", flag: "🇺🇸", url: "https://www.foxnews.com/live", category: "politics" },
-        { name: "MSNBC", country: "USA", flag: "🇺🇸", url: "https://www.msnbc.com/live", category: "politics" },
-        { name: "ABC News Live", country: "USA", flag: "🇺🇸", url: "https://abcnews.go.com/Live", category: "world" },
-        { name: "CBS News", country: "USA", flag: "🇺🇸", url: "https://www.cbsnews.com/live", category: "world" },
-        { name: "NBC News Now", country: "USA", flag: "🇺🇸", url: "https://www.nbcnews.com/now", category: "world" },
-        { name: "Bloomberg TV", country: "USA", flag: "🇺🇸", url: "https://www.bloomberg.com/live", category: "business" },
-        { name: "CNBC", country: "USA", flag: "🇺🇸", url: "https://www.cnbc.com/live-tv", category: "business" },
-        { name: "BBC News", country: "UK", flag: "🇬🇧", url: "https://www.bbc.com/news/live", category: "world" },
-        { name: "Sky News", country: "UK", flag: "🇬🇧", url: "https://news.sky.com/watch-live", category: "world" },
-        { name: "ITV News", country: "UK", flag: "🇬🇧", url: "https://www.itv.com/news/live", category: "world" },
-        { name: "Channel 4 News", country: "UK", flag: "🇬🇧", url: "https://www.channel4.com/news/live", category: "world" },
-        { name: "France 24", country: "France", flag: "🇫🇷", url: "https://www.france24.com/en/live", category: "world" },
-        { name: "BFM TV", country: "France", flag: "🇫🇷", url: "https://www.bfmtv.com/en-direct/", category: "world" },
-        { name: "DW News", country: "Germany", flag: "🇩🇪", url: "https://www.dw.com/en/live-tv/channel-english", category: "world" },
-        { name: "Tagesschau", country: "Germany", flag: "🇩🇪", url: "https://www.tagesschau.de/live", category: "world" },
-        { name: "NDTV 24x7", country: "India", flag: "🇮🇳", url: "https://www.ndtv.com/live-tv", category: "world" },
-        { name: "Times Now", country: "India", flag: "🇮🇳", url: "https://www.timesnownews.com/live-tv", category: "politics" },
-        { name: "India Today TV", country: "India", flag: "🇮🇳", url: "https://www.indiatoday.in/livetv", category: "world" },
-        { name: "CBC News", country: "Canada", flag: "🇨🇦", url: "https://www.cbc.ca/news/live", category: "world" },
-        { name: "CTV News", country: "Canada", flag: "🇨🇦", url: "https://www.ctvnews.ca/live", category: "world" },
-        { name: "Global News", country: "Canada", flag: "🇨🇦", url: "https://globalnews.ca/live/", category: "world" },
-        { name: "ABC Australia", country: "Australia", flag: "🇦🇺", url: "https://www.abc.net.au/news/live", category: "world" },
-        { name: "SBS News", country: "Australia", flag: "🇦🇺", url: "https://www.sbs.com.au/news/live", category: "world" },
-        { name: "NHK World", country: "Japan", flag: "🇯🇵", url: "https://www3.nhk.or.jp/nhkworld/en/live/", category: "world" },
-        { name: "TV Asahi", country: "Japan", flag: "🇯🇵", url: "https://www.tv-asahi.co.jp/live/", category: "world" },
-        { name: "GloboNews", country: "Brazil", flag: "🇧🇷", url: "https://globoplay.globo.com/globo-news/", category: "world" },
-        { name: "BandNews", country: "Brazil", flag: "🇧🇷", url: "https://www.band.uol.com.br/bandnews-tv/", category: "world" },
-        { name: "SABC News", country: "South Africa", flag: "🇿🇦", url: "https://www.sabcnews.com/live/", category: "world" },
-        { name: "eNCA", country: "South Africa", flag: "🇿🇦", url: "https://www.enca.com/live", category: "world" },
-        { name: "Channels TV", country: "Nigeria", flag: "🇳🇬", url: "https://www.channelstv.com/live/", category: "world" },
-        { name: "Arise TV", country: "Nigeria", flag: "🇳🇬", url: "https://www.arise.tv/live", category: "world" },
-        { name: "Al Arabiya", country: "UAE", flag: "🇦🇪", url: "https://english.alarabiya.net/live-stream", category: "world" },
-        { name: "Sky News Arabia", country: "UAE", flag: "🇦🇪", url: "https://www.skynewsarabia.com/live", category: "world" },
-        { name: "RT News", country: "Russia", flag: "🇷🇺", url: "https://www.rt.com/on-air", category: "world" },
-        { name: "Russia 24", country: "Russia", flag: "🇷🇺", url: "https://www.vesti.ru/live", category: "world" },
-        { name: "CGTN", country: "China", flag: "🇨🇳", url: "https://www.cgtn.com/live", category: "world" },
-        { name: "CCTV News", country: "China", flag: "🇨🇳", url: "https://news.cctv.com/live/", category: "world" },
-        { name: "Arirang News", country: "South Korea", flag: "🇰🇷", url: "https://www.arirang.com/Live", category: "world" },
-        { name: "YTN", country: "South Korea", flag: "🇰🇷", url: "https://www.ytn.co.kr/live", category: "world" },
-        { name: "Foro TV", country: "Mexico", flag: "🇲🇽", url: "https://www.forotv.com/en-directo", category: "world" },
-        { name: "Milenio TV", country: "Mexico", flag: "🇲🇽", url: "https://www.milenio.com/mileniotv/en-vivo", category: "world" },
-        { name: "RTVE", country: "Spain", flag: "🇪🇸", url: "https://www.rtve.es/play/directo/canal-24h/", category: "world" },
-        { name: "Antena 3", country: "Spain", flag: "🇪🇸", url: "https://www.antena3.com/directo/", category: "world" },
-        { name: "Rai News", country: "Italy", flag: "🇮🇹", url: "https://www.rainews.it/dirette", category: "world" },
-        { name: "Sky TG24", country: "Italy", flag: "🇮🇹", url: "https://video.sky.it/live/tg24", category: "world" },
-        { name: "TRT World", country: "Turkey", flag: "🇹🇷", url: "https://www.trtworld.com/live", category: "world" },
-        { name: "ABS-CBN News", country: "Philippines", flag: "🇵🇭", url: "https://www.abs-cbn.com/news/live", category: "world" },
-        { name: "GMA News", country: "Philippines", flag: "🇵🇭", url: "https://www.gmanetwork.com/news/live", category: "world" }
+        { name: "CNN", country: "USA", flag: "🇺🇸", url: "https://www.cnn.com/world/live-news", embedUrl: "https://www.cnn.com/world/live-news", category: "world", embedType: "direct" },
+        { name: "Fox News", country: "USA", flag: "🇺🇸", url: "https://www.foxnews.com/live", embedUrl: "https://www.foxnews.com/live", category: "politics" },
+        { name: "MSNBC", country: "USA", flag: "🇺🇸", url: "https://www.msnbc.com/live", embedUrl: "https://www.msnbc.com/live", category: "politics" },
+        { name: "ABC News Live", country: "USA", flag: "🇺🇸", url: "https://abcnews.go.com/Live", embedUrl: "https://abcnews.go.com/Live", category: "world" },
+        { name: "CBS News", country: "USA", flag: "🇺🇸", url: "https://www.cbsnews.com/live", embedUrl: "https://www.cbsnews.com/live", category: "world" },
+        { name: "Bloomberg TV", country: "USA", flag: "🇺🇸", url: "https://www.bloomberg.com/live", embedUrl: "https://www.bloomberg.com/live", category: "business" },
+        { name: "CNBC", country: "USA", flag: "🇺🇸", url: "https://www.cnbc.com/live-tv", embedUrl: "https://www.cnbc.com/live-tv", category: "business" },
+        { name: "BBC News", country: "UK", flag: "🇬🇧", url: "https://www.bbc.com/news/live", embedUrl: "https://www.bbc.com/news/live", category: "world" },
+        { name: "Sky News", country: "UK", flag: "🇬🇧", url: "https://news.sky.com/watch-live", embedUrl: "https://news.sky.com/watch-live", category: "world" },
+        { name: "France 24", country: "France", flag: "🇫🇷", url: "https://www.france24.com/en/live", embedUrl: "https://www.france24.com/en/live", category: "world" },
+        { name: "DW News", country: "Germany", flag: "🇩🇪", url: "https://www.dw.com/en/live-tv", embedUrl: "https://www.dw.com/en/live-tv", category: "world" },
+        { name: "NDTV 24x7", country: "India", flag: "🇮🇳", url: "https://www.ndtv.com/live-tv", embedUrl: "https://www.ndtv.com/live-tv", category: "world" },
+        { name: "Times Now", country: "India", flag: "🇮🇳", url: "https://www.timesnownews.com/live-tv", embedUrl: "https://www.timesnownews.com/live-tv", category: "politics" },
+        { name: "CBC News", country: "Canada", flag: "🇨🇦", url: "https://www.cbc.ca/news/live", embedUrl: "https://www.cbc.ca/news/live", category: "world" },
+        { name: "ABC Australia", country: "Australia", flag: "🇦🇺", url: "https://www.abc.net.au/news/live", embedUrl: "https://www.abc.net.au/news/live", category: "world" },
+        { name: "NHK World", country: "Japan", flag: "🇯🇵", url: "https://www3.nhk.or.jp/nhkworld/en/live/", embedUrl: "https://www3.nhk.or.jp/nhkworld/en/live/", category: "world" },
+        { name: "GloboNews", country: "Brazil", flag: "🇧🇷", url: "https://globoplay.globo.com/globo-news/", embedUrl: "https://globoplay.globo.com/globo-news/", category: "world" },
+        { name: "SABC News", country: "South Africa", flag: "🇿🇦", url: "https://www.sabcnews.com/live/", embedUrl: "https://www.sabcnews.com/live/", category: "world" },
+        { name: "Channels TV", country: "Nigeria", flag: "🇳🇬", url: "https://www.channelstv.com/live/", embedUrl: "https://www.channelstv.com/live/", category: "world" },
+        { name: "Al Arabiya", country: "UAE", flag: "🇦🇪", url: "https://english.alarabiya.net/live-stream", embedUrl: "https://english.alarabiya.net/live-stream", category: "world" },
+        { name: "RT News", country: "Russia", flag: "🇷🇺", url: "https://www.rt.com/on-air", embedUrl: "https://www.rt.com/on-air", category: "world" },
+        { name: "CGTN", country: "China", flag: "🇨🇳", url: "https://www.cgtn.com/live", embedUrl: "https://www.cgtn.com/live", category: "world" },
+        { name: "Arirang News", country: "South Korea", flag: "🇰🇷", url: "https://www.arirang.com/Live", embedUrl: "https://www.arirang.com/Live", category: "world" },
+        { name: "TRT World", country: "Turkey", flag: "🇹🇷", url: "https://www.trtworld.com/live", embedUrl: "https://www.trtworld.com/live", category: "world" },
+        { name: "ABS-CBN News", country: "Philippines", flag: "🇵🇭", url: "https://www.abs-cbn.com/news/live", embedUrl: "https://www.abs-cbn.com/news/live", category: "world" }
     ];
 
-    // Text news sources
+    // Text & Video sources (simplified)
     const TEXT_SOURCES = [
         { name: "Reuters", country: "Global", flag: "🌍", url: "https://www.reuters.com", category: "world" },
         { name: "AP News", country: "Global", flag: "🌍", url: "https://apnews.com", category: "world" },
         { name: "The New York Times", country: "USA", flag: "🇺🇸", url: "https://www.nytimes.com", category: "world" },
-        { name: "Washington Post", country: "USA", flag: "🇺🇸", url: "https://www.washingtonpost.com", category: "politics" },
-        { name: "Wall Street Journal", country: "USA", flag: "🇺🇸", url: "https://www.wsj.com", category: "business" },
         { name: "The Guardian", country: "UK", flag: "🇬🇧", url: "https://www.theguardian.com", category: "world" },
         { name: "The Times of India", country: "India", flag: "🇮🇳", url: "https://timesofindia.indiatimes.com", category: "world" },
-        { name: "The Hindu", country: "India", flag: "🇮🇳", url: "https://www.thehindu.com", category: "world" },
         { name: "Le Monde", country: "France", flag: "🇫🇷", url: "https://www.lemonde.fr", category: "world" },
-        { name: "Der Spiegel", country: "Germany", flag: "🇩🇪", url: "https://www.spiegel.de", category: "world" },
-        { name: "The Globe and Mail", country: "Canada", flag: "🇨🇦", url: "https://www.theglobeandmail.com", category: "world" },
-        { name: "Sydney Morning Herald", country: "Australia", flag: "🇦🇺", url: "https://www.smh.com.au", category: "world" },
-        { name: "The Japan Times", country: "Japan", flag: "🇯🇵", url: "https://www.japantimes.co.jp", category: "world" },
-        { name: "Folha de S.Paulo", country: "Brazil", flag: "🇧🇷", url: "https://www.folha.uol.com.br", category: "world" },
-        { name: "News24", country: "South Africa", flag: "🇿🇦", url: "https://www.news24.com", category: "world" },
-        { name: "The National", country: "UAE", flag: "🇦🇪", url: "https://www.thenationalnews.com", category: "business" },
-        { name: "China Daily", country: "China", flag: "🇨🇳", url: "https://www.chinadaily.com.cn", category: "world" },
-        { name: "Korea Times", country: "South Korea", flag: "🇰🇷", url: "https://www.koreatimes.co.kr", category: "world" },
-        { name: "El País", country: "Spain", flag: "🇪🇸", url: "https://elpais.com", category: "world" },
-        { name: "Corriere della Sera", country: "Italy", flag: "🇮🇹", url: "https://www.corriere.it", category: "world" }
+        { name: "Der Spiegel", country: "Germany", flag: "🇩🇪", url: "https://www.spiegel.de", category: "world" }
     ];
-
-    // Video sources
     const VIDEO_SOURCES = [
         { name: "CNN YouTube", country: "USA", flag: "🇺🇸", url: "https://www.youtube.com/@CNN", category: "world" },
         { name: "BBC News YouTube", country: "UK", flag: "🇬🇧", url: "https://www.youtube.com/@BBCNews", category: "world" },
-        { name: "Sky News YouTube", country: "UK", flag: "🇬🇧", url: "https://www.youtube.com/@SkyNews", category: "world" },
-        { name: "France 24 YouTube", country: "France", flag: "🇫🇷", url: "https://www.youtube.com/@France24_en", category: "world" },
-        { name: "DW News YouTube", country: "Germany", flag: "🇩🇪", url: "https://www.youtube.com/@dwnews", category: "world" },
-        { name: "NDTV YouTube", country: "India", flag: "🇮🇳", url: "https://www.youtube.com/@NDTV", category: "world" },
-        { name: "Al Jazeera YouTube", country: "Qatar", flag: "🇶🇦", url: "https://www.youtube.com/@AlJazeeraEnglish", category: "world" },
-        { name: "CBC News YouTube", country: "Canada", flag: "🇨🇦", url: "https://www.youtube.com/@cbcnews", category: "world" },
-        { name: "ABC News (AU) YouTube", country: "Australia", flag: "🇦🇺", url: "https://www.youtube.com/@abcnews", category: "world" },
-        { name: "NHK World YouTube", country: "Japan", flag: "🇯🇵", url: "https://www.youtube.com/@NHKWORLDJAPAN", category: "world" },
-        { name: "Bloomberg Quicktake", country: "USA", flag: "🇺🇸", url: "https://www.youtube.com/@BloombergQuicktake", category: "business" }
+        { name: "Sky News YouTube", country: "UK", flag: "🇬🇧", url: "https://www.youtube.com/@SkyNews", category: "world" }
     ];
 
     let allItems = [];
     let activeCategory = "all", activeMedia = "all", activeCountry = "all", searchQuery = "";
     let chartInstance = null;
+    let activeModal = null;
 
     function buildDatabase() {
         let items = [], id = 1;
-        // TV Channels
         TV_CHANNELS_DATA.forEach(tv => {
-            items.push({ id: `tv_${id++}`, title: `🔴 LIVE: ${tv.name} (${tv.country})`, description: `Watch ${tv.name} live stream. Breaking news, analysis, and global coverage. Official ${tv.name} live feed.`, category: tv.category || "world", mediaType: "tv", url: tv.url, source: tv.name, country: tv.country, flag: tv.flag, date: new Date().toISOString() });
+            items.push({ id: `tv_${id++}`, title: `🔴 LIVE: ${tv.name} (${tv.country})`, description: `Watch ${tv.name} live stream. Breaking news, analysis, and global coverage. Click to watch full screen.`, category: tv.category || "world", mediaType: "tv", url: tv.url, embedUrl: tv.embedUrl || tv.url, source: tv.name, country: tv.country, flag: tv.flag, date: new Date().toISOString() });
         });
-        // Text Sources
         TEXT_SOURCES.forEach(txt => {
-            items.push({ id: `text_${id++}`, title: `📰 ${txt.name} — Latest Headlines from ${txt.country}`, description: `Top stories, investigations and breaking news from ${txt.name}. Trusted journalism.`, category: txt.category, mediaType: "text", url: txt.url, source: txt.name, country: txt.country, flag: txt.flag, date: new Date(Date.now() - Math.random()*86400000).toISOString() });
+            items.push({ id: `text_${id++}`, title: `📰 ${txt.name} — Latest Headlines`, description: `Top stories from ${txt.name}. Trusted journalism.`, category: txt.category, mediaType: "text", url: txt.url, source: txt.name, country: txt.country, flag: txt.flag, date: new Date(Date.now() - Math.random()*86400000).toISOString() });
         });
-        // Video Sources
         VIDEO_SOURCES.forEach(vid => {
-            items.push({ id: `vid_${id++}`, title: `🎬 ${vid.name} — Video News Coverage`, description: `Latest video reports, interviews and live coverage from ${vid.name}.`, category: vid.category, mediaType: "video", url: vid.url, source: vid.name, country: vid.country, flag: vid.flag, date: new Date(Date.now() - Math.random()*86400000).toISOString() });
+            items.push({ id: `vid_${id++}`, title: `🎬 ${vid.name} — Video News`, description: `Latest video reports and coverage.`, category: vid.category, mediaType: "video", url: vid.url, source: vid.name, country: vid.country, flag: vid.flag, date: new Date(Date.now() - Math.random()*86400000).toISOString() });
         });
-        // Breaking / extra
-        for(let i=0;i<25;i++) items.push({ id: `br_${id++}`, title: `⚡ BREAKING: ${["Global Markets Rally","Tech Innovation Summit","Election Results","Climate Agreement","Sports Championship"][i%5]}`, description: "Developing story — click for latest updates from global newsrooms.", category: ["politics","technology","business","sports","world"][i%5], mediaType: "text", url: "https://www.reuters.com", source: "Reuters", country: "Global", flag: "🌍", date: new Date(Date.now() - i*3600000).toISOString() });
+        for(let i=0;i<20;i++) items.push({ id: `br_${id++}`, title: `⚡ BREAKING: ${["Global News Update","Tech Breakthrough","Market Rally","Sports Finals"][i%4]}`, description: "Developing story — click for updates.", category: ["politics","technology","business","world"][i%4], mediaType: "text", url: "https://www.reuters.com", source: "Reuters", country: "Global", flag: "🌍", date: new Date(Date.now() - i*3600000).toISOString() });
         return items;
     }
 
     allItems = buildDatabase();
+
+    // Helper: Generate iframe preview URL (using direct embed or oembed approach)
+    function getPreviewHtml(item) {
+        // For live TV, we embed the actual live page in an iframe for preview (shows live player)
+        if (item.mediaType === 'tv' && item.url) {
+            return `<iframe src="${item.url}" frameborder="0" allowfullscreen style="width:100%; height:100%; pointer-events:none;" title="${item.source} preview"></iframe>`;
+        }
+        return `<div style="background: #1e2a3a; height:100%; display:flex; align-items:center; justify-content:center; color:white;"><i class="fas fa-tv" style="font-size:48px;"></i><span style="margin-left:10px;">Live Stream</span></div>`;
+    }
+
+    function showFullPreview(item) {
+        if (activeModal) document.body.removeChild(activeModal);
+        const modal = document.createElement('div');
+        modal.className = 'modal-preview';
+        modal.innerHTML = `
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-tv"></i> ${item.source} — LIVE STREAM</h3>
+                    <button class="modal-close">&times;</button>
+                </div>
+                <div class="modal-video">
+                    <iframe src="${item.url}" frameborder="0" allowfullscreen allow="autoplay; encrypted-media" style="width:100%; height:100%;"></iframe>
+                </div>
+            </div>
+        `;
+        modal.querySelector('.modal-close').addEventListener('click', () => { document.body.removeChild(modal); activeModal = null; });
+        modal.addEventListener('click', (e) => { if (e.target === modal) { document.body.removeChild(modal); activeModal = null; } });
+        document.body.appendChild(modal);
+        activeModal = modal;
+    }
 
     function updateStats() {
         document.getElementById('totalText').innerText = allItems.filter(i=>i.mediaType==='text').length;
@@ -234,17 +233,19 @@
     }
 
     function renderTV() {
-        const tvItems = allItems.filter(i=>i.mediaType==='tv').slice(0,28);
+        const tvItems = allItems.filter(i=>i.mediaType==='tv').slice(0,24);
         const container = document.getElementById('tvGlobalList');
-        container.innerHTML = tvItems.map(t => `<div class="tv-channel" data-url="${t.url}" data-name="${t.source}"><i class="fas fa-tv" style="color:#cc0000;"></i><div><strong>${t.source}</strong><br><small>${t.flag} ${t.country}</small></div></div>`).join('');
-        document.querySelectorAll('.tv-channel').forEach(el => el.addEventListener('click', () => { const url = el.getAttribute('data-url'); const name = el.getAttribute('data-name'); if(url) { window.open(url, '_blank'); addToHistory({ title: `📺 ${name}`, url: url }); showToast(`Opening ${name} live stream`); } }));
+        container.innerHTML = tvItems.map(t => `<div class="tv-channel" data-url="${t.url}" data-name="${t.source}" data-embed="${t.embedUrl || t.url}"><i class="fas fa-tv preview-icon"></i><div><strong>${t.source}</strong><br><small>${t.flag} ${t.country}</small></div><i class="fas fa-play-circle" style="color:#cc0000; margin-left:auto;"></i></div>`).join('');
+        document.querySelectorAll('.tv-channel').forEach(el => {
+            el.addEventListener('click', (e) => { e.stopPropagation(); const url = el.getAttribute('data-url'); const name = el.getAttribute('data-name'); if(url) { window.open(url, '_blank'); addToHistory({ title: `📺 ${name}`, url: url }); showToast(`Opening ${name} live stream`); } });
+        });
     }
 
+    // Bookmark & History functions
     function getBookmarks() { return JSON.parse(localStorage.getItem(STORAGE.bookmarks) || '[]'); }
     function saveBookmarks(b) { localStorage.setItem(STORAGE.bookmarks, JSON.stringify(b)); renderBookmarks(); }
     function toggleBookmark(item) { let b = getBookmarks(); const exists = b.some(bk=>bk.id===item.id); if(exists) b = b.filter(bk=>bk.id!==item.id); else b.push({ id:item.id, title:item.title, url:item.url, source:item.source, country:item.country }); saveBookmarks(b); showToast(exists ? "Removed" : "Saved"); renderNews(); }
     function renderBookmarks() { const b = getBookmarks(); const container = document.getElementById('bookmarksList'); if(!b.length) { container.innerHTML='<div style="padding:24px;text-align:center;color:#8a9bb0;">📌 No saved stories</div>'; return; } container.innerHTML = b.map(bk=>`<div class="bookmark-item" data-url="${bk.url}"><div><strong>${bk.title.length>60?bk.title.slice(0,60)+'…':bk.title}</strong><br><small>${bk.source} | ${bk.country||'Global'}</small></div><i class="fas fa-trash-alt" style="color:#cc0000;" data-id="${bk.id}"></i></div>`).join(''); document.querySelectorAll('.bookmark-item').forEach(el=>{ el.addEventListener('click',(e)=>{ if(e.target.classList.contains('fa-trash-alt')){ let id=e.target.getAttribute('data-id'); let updated=getBookmarks().filter(bk=>bk.id!=id); saveBookmarks(updated); showToast("Removed"); } else { window.open(el.getAttribute('data-url'),'_blank'); } }); }); }
-
     function addToHistory(item) { let history = JSON.parse(localStorage.getItem(STORAGE.history) || '[]'); if(!history.some(h=>h.title===item.title)) { history.unshift({ ...item, time: new Date().toISOString() }); if(history.length>40) history.pop(); localStorage.setItem(STORAGE.history, JSON.stringify(history)); renderHistory(); } }
     function renderHistory() { let history = JSON.parse(localStorage.getItem(STORAGE.history) || '[]'); const container = document.getElementById('historyList'); if(!history.length) { container.innerHTML='<div style="padding:24px;text-align:center;color:#8a9bb0;">📖 No viewing history</div>'; return; } container.innerHTML = history.map(h=>`<div class="history-item" data-url="${h.url}"><div><strong>${h.title.length>70?h.title.slice(0,70)+'…':h.title}</strong><br><small>${new Date(h.time).toLocaleString()}</small></div><i class="fas fa-external-link-alt"></i></div>`).join(''); document.querySelectorAll('.history-item').forEach(el=>el.addEventListener('click',()=>{ window.open(el.getAttribute('data-url'),'_blank'); })); }
     function clearHistory() { localStorage.setItem(STORAGE.history, JSON.stringify([])); renderHistory(); showToast("History cleared"); }
@@ -254,10 +255,55 @@
     function renderNews() {
         let filtered = allItems.filter(i=> (activeCategory==='all' || i.category===activeCategory) && (activeMedia==='all' || i.mediaType===activeMedia) && (activeCountry==='all' || i.country===activeCountry) && (searchQuery==='' || i.title.toLowerCase().includes(searchQuery) || i.source.toLowerCase().includes(searchQuery) || i.country?.toLowerCase().includes(searchQuery)) );
         filtered.sort((a,b)=>new Date(b.date)-new Date(a.date));
-        const container = document.getElementById('newsContainer'); if(!filtered.length) { container.innerHTML='<div class="loader" style="text-align:center;padding:60px;">No results — adjust filters</div>'; return; }
+        const container = document.getElementById('newsContainer'); if(!filtered.length) { container.innerHTML='<div class="loader">No results — adjust filters</div>'; return; }
         const bookmarks = getBookmarks();
-        container.innerHTML = filtered.map(n => { let mediaHtml = n.mediaType==='video' ? `<div class="video-placeholder"><i class="fab fa-youtube" style="font-size:40px;"></i><span>WATCH VIDEO</span></div>` : (n.mediaType==='tv' ? `<div class="video-placeholder"><i class="fas fa-tv" style="font-size:40px;"></i><span>LIVE TV STREAM</span><span style="font-size:10px;">Click to watch</span></div>` : `<img class="card-media" src="https://picsum.photos/id/${Math.floor(Math.random()*200)+40}/500/280" loading="lazy">`); let isBookmarked = bookmarks.some(b=>b.id===n.id); return `<div class="news-card" style="position:relative;" data-url="${n.url}" data-title="${escapeHtml(n.title)}"><div class="bookmark-icon ${isBookmarked ? 'bookmarked' : ''}" data-id="${n.id}"><i class="fas fa-bookmark"></i></div>${mediaHtml}<div class="card-content"><div class="card-badges"><span class="badge-country">${n.flag||'🌍'} ${n.country||'GLOBAL'}</span><span class="badge-type">${n.mediaType.toUpperCase()}</span><span class="badge-type">${n.category.toUpperCase()}</span></div><div class="card-title">${escapeHtml(n.title)}</div><div class="card-desc">${escapeHtml(n.description?.slice(0,110))}...</div><div class="card-footer"><span><i class="fas fa-newspaper"></i> ${n.source}</span><span>${new Date(n.date).toLocaleDateString()}</span></div></div></div>`; }).join('');
-        document.querySelectorAll('.news-card').forEach(card=>{ card.addEventListener('click',(e)=>{ if(!e.target.closest('.bookmark-icon')){ const url=card.getAttribute('data-url'); const title=card.getAttribute('data-title'); if(url){ window.open(url,'_blank'); addToHistory({title:title,url:url}); showToast("Opening source"); } } }); const bm=card.querySelector('.bookmark-icon'); if(bm) bm.addEventListener('click',(e)=>{ e.stopPropagation(); const id=bm.getAttribute('data-id'); const item=allItems.find(i=>i.id==id); if(item) toggleBookmark(item); }); });
+        container.innerHTML = filtered.map(n => {
+            let mediaHtml = '';
+            if (n.mediaType === 'tv') {
+                mediaHtml = `<div class="video-preview-container" data-url="${n.url}" data-name="${n.source}">
+                    <div class="live-tag"><i class="fas fa-circle"></i> LIVE</div>
+                    ${getPreviewHtml(n)}
+                    <div class="video-preview-overlay"><div class="play-icon"><i class="fas fa-play"></i></div></div>
+                </div>`;
+            } else if (n.mediaType === 'video') {
+                mediaHtml = `<div class="video-placeholder" style="background:#1e2a3a; height:200px; display:flex; align-items:center; justify-content:center; color:white;"><i class="fab fa-youtube" style="font-size:48px;"></i><span style="margin-left:10px;">Video News</span></div>`;
+            } else {
+                mediaHtml = `<img class="card-media" src="https://picsum.photos/id/${Math.floor(Math.random()*200)+40}/500/280" loading="lazy">`;
+            }
+            let isBookmarked = bookmarks.some(b=>b.id===n.id);
+            return `<div class="news-card" data-url="${n.url}" data-title="${escapeHtml(n.title)}" data-media-type="${n.mediaType}" data-embed="${n.embedUrl || n.url}">
+                <div class="bookmark-icon ${isBookmarked ? 'bookmarked' : ''}" data-id="${n.id}"><i class="fas fa-bookmark"></i></div>
+                ${mediaHtml}
+                <div class="card-content">
+                    <div class="card-badges"><span class="badge-country">${n.flag||'🌍'} ${n.country||'GLOBAL'}</span><span class="badge-type">${n.mediaType.toUpperCase()}</span><span class="badge-type">${n.category.toUpperCase()}</span></div>
+                    <div class="card-title">${escapeHtml(n.title)}</div>
+                    <div class="card-desc">${escapeHtml(n.description?.slice(0,110))}...</div>
+                    <div class="card-footer"><span><i class="fas fa-newspaper"></i> ${n.source}</span><span>${new Date(n.date).toLocaleDateString()}</span></div>
+                </div>
+            </div>`;
+        }).join('');
+        // Attach event listeners
+        document.querySelectorAll('.news-card').forEach(card => {
+            const mediaType = card.getAttribute('data-media-type');
+            const url = card.getAttribute('data-url');
+            const title = card.getAttribute('data-title');
+            card.addEventListener('click', (e) => {
+                if (!e.target.closest('.bookmark-icon') && !e.target.closest('.play-icon') && !e.target.closest('.video-preview-container')) {
+                    if (url) { window.open(url, '_blank'); addToHistory({ title: title, url: url }); showToast("Opening source"); }
+                }
+            });
+            // Preview click handling for TV channels
+            const previewContainer = card.querySelector('.video-preview-container');
+            if (previewContainer) {
+                const playBtn = previewContainer.querySelector('.play-icon');
+                const fullItem = allItems.find(i => i.url === url);
+                const openFull = () => { if (fullItem) showFullPreview(fullItem); else if (url) window.open(url, '_blank'); };
+                if (playBtn) playBtn.addEventListener('click', (e) => { e.stopPropagation(); openFull(); });
+                previewContainer.addEventListener('click', (e) => { e.stopPropagation(); openFull(); });
+            }
+            const bookmarkBtn = card.querySelector('.bookmark-icon');
+            if (bookmarkBtn) bookmarkBtn.addEventListener('click', (e) => { e.stopPropagation(); const id = bookmarkBtn.getAttribute('data-id'); const item = allItems.find(i => i.id == id); if (item) toggleBookmark(item); });
+        });
         updateChart();
     }
 
