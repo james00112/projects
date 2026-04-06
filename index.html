@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>GlobalScope News | Worldwide News Hub</title>
+    <title>GlobalScope News | Ultimate News Hub</title>
     <!-- Google Fonts & Font Awesome -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Chart.js for analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -16,7 +18,7 @@
         }
 
         body {
-            background: #f4f7fc;
+            background: #f0f4f8;
             color: #1e2a3e;
         }
 
@@ -27,8 +29,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.85);
-            backdrop-filter: blur(10px);
+            background: rgba(0,0,0,0.88);
+            backdrop-filter: blur(12px);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -38,30 +40,31 @@
 
         .auth-card {
             background: white;
-            max-width: 450px;
+            max-width: 460px;
             width: 90%;
-            border-radius: 32px;
-            padding: 2rem;
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+            border-radius: 40px;
+            padding: 2.2rem;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
             text-align: center;
         }
 
         .auth-card h2 {
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
             color: #0f3b5c;
+            font-weight: 800;
         }
 
         .auth-card input {
             width: 100%;
             padding: 14px 18px;
             margin: 12px 0;
-            border: 1px solid #cbd5e1;
-            border-radius: 40px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 50px;
             font-size: 1rem;
             outline: none;
             transition: 0.2s;
         }
-        .auth-card input:focus { border-color: #0f3b5c; box-shadow: 0 0 0 2px rgba(15,59,92,0.2); }
+        .auth-card input:focus { border-color: #0f3b5c; box-shadow: 0 0 0 3px rgba(15,59,92,0.1); }
 
         .auth-card button {
             background: #0f3b5c;
@@ -69,7 +72,7 @@
             border: none;
             padding: 12px 0;
             width: 100%;
-            border-radius: 40px;
+            border-radius: 50px;
             font-weight: bold;
             cursor: pointer;
             margin-top: 10px;
@@ -78,12 +81,12 @@
 
         .auth-card button:hover { background: #1e5a7a; transform: scale(0.98); }
         .switch-auth { color: #0f3b5c; margin-top: 15px; cursor: pointer; font-weight: 600; }
-        .error-msg { color: #c72a2a; font-size: 0.85rem; margin: 5px 0; }
+        .error-msg { color: #c72a2a; font-size: 0.8rem; margin: 5px 0; }
 
         /* Main App */
         #mainApp {
             display: none;
-            max-width: 1400px;
+            max-width: 1500px;
             margin: 0 auto;
             padding: 20px;
         }
@@ -94,17 +97,39 @@
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             background: white;
-            padding: 15px 25px;
-            border-radius: 60px;
+            padding: 12px 28px;
+            border-radius: 70px;
             box-shadow: 0 8px 20px rgba(0,0,0,0.05);
         }
-        .logo h1 { font-size: 1.7rem; color: #0f3b5c; }
-        .logo span { font-weight: 300; font-size: 0.9rem; }
-        .user-info { display: flex; align-items: center; gap: 15px; }
-        #logoutBtn { background: #e53e3e; padding: 8px 18px; border-radius: 40px; border: none; color: white; cursor: pointer; font-weight: 600; transition: 0.2s; }
+        .logo h1 { font-size: 1.8rem; color: #0f3b5c; letter-spacing: -0.5px; }
+        .logo span { font-weight: 400; font-size: 0.85rem; background: #eef2ff; padding: 4px 12px; border-radius: 40px; }
+        .user-info { display: flex; align-items: center; gap: 18px; }
+        #logoutBtn { background: #e53e3e; padding: 8px 22px; border-radius: 40px; border: none; color: white; cursor: pointer; font-weight: 600; transition: 0.2s; }
         #logoutBtn:hover { background: #c53030; }
+
+        /* Stats Bar */
+        .stats-bar {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        .stat-card {
+            background: white;
+            padding: 16px 24px;
+            border-radius: 32px;
+            flex: 1;
+            min-width: 150px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .stat-icon { font-size: 2rem; color: #0f3b5c; }
+        .stat-info h4 { font-size: 0.8rem; color: #64748b; }
+        .stat-info p { font-size: 1.8rem; font-weight: 800; color: #0f3b5c; }
 
         /* Filters */
         .filters {
@@ -113,26 +138,50 @@
             gap: 12px;
             margin-bottom: 30px;
             background: white;
-            padding: 15px 20px;
-            border-radius: 50px;
+            padding: 15px 22px;
+            border-radius: 60px;
             align-items: center;
             justify-content: space-between;
             box-shadow: 0 4px 12px rgba(0,0,0,0.03);
         }
-        .cat-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
+        .cat-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
         .cat-btn, .media-btn {
             background: #e2e8f0;
             border: none;
-            padding: 8px 20px;
+            padding: 8px 18px;
             border-radius: 40px;
             cursor: pointer;
             font-weight: 500;
             transition: 0.2s;
         }
         .cat-btn.active, .media-btn.active { background: #0f3b5c; color: white; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-        .media-group { display: flex; gap: 10px; }
+        
+        /* Search & Sort */
+        .search-sort {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            background: #f8fafc;
+            padding: 5px 15px;
+            border-radius: 50px;
+        }
+        #searchInput {
+            border: none;
+            padding: 10px 15px;
+            border-radius: 40px;
+            background: transparent;
+            outline: none;
+            width: 180px;
+        }
+        #sortSelect {
+            border: none;
+            background: transparent;
+            font-weight: 500;
+            padding: 8px;
+            cursor: pointer;
+        }
 
-        /* News Grid - responsive masonry feel */
+        /* News Grid */
         .news-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
@@ -141,18 +190,18 @@
         }
         .news-card {
             background: white;
-            border-radius: 28px;
+            border-radius: 32px;
             overflow: hidden;
-            transition: transform 0.25s ease, box-shadow 0.3s;
-            box-shadow: 0 6px 14px rgba(0,0,0,0.05);
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
             cursor: pointer;
             display: flex;
             flex-direction: column;
         }
-        .news-card:hover { transform: translateY(-6px); box-shadow: 0 24px 36px -12px rgba(0,0,0,0.2); }
-        .card-media { width: 100%; height: 200px; object-fit: cover; background: #cbd5e1; transition: 0.2s; }
+        .news-card:hover { transform: translateY(-8px); box-shadow: 0 25px 35px -12px rgba(0,0,0,0.2); }
+        .card-media { width: 100%; height: 200px; object-fit: cover; background: #cbd5e1; }
         .video-placeholder {
-            background: #0f172a;
+            background: linear-gradient(135deg, #0f172a, #1e293b);
             height: 200px;
             display: flex;
             align-items: center;
@@ -161,52 +210,67 @@
             color: white;
         }
         .card-content { padding: 20px; flex: 1; }
-        .card-category { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: #0f3b5c; font-weight: 700; margin-bottom: 8px; }
-        .card-title { font-size: 1.25rem; font-weight: 700; margin: 8px 0; line-height: 1.3; }
-        .card-desc { color: #475569; font-size: 0.9rem; margin-bottom: 16px; line-height: 1.4; }
+        .card-category { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: #0f3b5c; font-weight: 800; margin-bottom: 8px; }
+        .card-title { font-size: 1.25rem; font-weight: 800; margin: 8px 0; line-height: 1.3; }
+        .card-desc { color: #475569; font-size: 0.9rem; margin-bottom: 16px; line-height: 1.45; }
         .card-meta { display: flex; justify-content: space-between; font-size: 0.75rem; color: #64748b; margin-top: auto; }
         .video-badge { background: #ef4444; color: white; border-radius: 20px; padding: 2px 10px; font-size: 0.7rem; display: inline-block; margin-left: 8px; }
+        .bookmark-icon { color: #fbbf24; margin-left: 8px; cursor: pointer; transition: 0.2s; }
+        .bookmark-icon.active { color: #f59e0b; }
 
-        /* History Panel */
+        /* Analytics & History Row */
+        .dashboard-row {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 25px;
+            margin-top: 20px;
+            margin-bottom: 30px;
+        }
+        .analytics-card, .trending-card {
+            background: white;
+            border-radius: 32px;
+            padding: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+        }
         .history-panel {
             background: white;
             border-radius: 32px;
-            margin-top: 20px;
             padding: 20px;
             box-shadow: 0 8px 20px rgba(0,0,0,0.05);
         }
         .history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; }
-        .history-list { max-height: 320px; overflow-y: auto; border-radius: 20px; }
-        .history-item { border-bottom: 1px solid #e2e8f0; padding: 14px; display: flex; justify-content: space-between; align-items: center; transition: 0.1s; }
+        .history-list { max-height: 280px; overflow-y: auto; }
+        .history-item { border-bottom: 1px solid #e2e8f0; padding: 12px; display: flex; justify-content: space-between; align-items: center; transition: 0.1s; }
         .history-item:hover { background: #f8fafc; }
-        .clear-history { background: #475569; border: none; padding: 6px 18px; border-radius: 30px; color: white; cursor: pointer; transition: 0.2s; }
-        .clear-history:hover { background: #1e293b; }
+        .clear-history { background: #475569; border: none; padding: 6px 18px; border-radius: 30px; color: white; cursor: pointer; }
+        .trending-tag { background: #eef2ff; padding: 6px 12px; border-radius: 40px; font-size: 0.8rem; margin: 5px; display: inline-block; }
 
         .loader { text-align: center; padding: 50px; font-weight: 500; color: #0f3b5c; }
         footer { text-align: center; margin-top: 40px; padding: 20px; color: #5a6e85; border-top: 1px solid rgba(0,0,0,0.05); }
-        @media (max-width: 700px) { .filters { flex-direction: column; align-items: stretch; } .header { border-radius: 30px; } }
-        .toast-msg { position: fixed; bottom: 20px; left: 20px; background: #0f3b5c; color: white; padding: 10px 20px; border-radius: 40px; z-index: 999; font-size: 0.85rem; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+        .toast-msg { position: fixed; bottom: 20px; left: 20px; background: #0f3b5c; color: white; padding: 12px 24px; border-radius: 50px; z-index: 1000; font-size: 0.85rem; box-shadow: 0 4px 12px rgba(0,0,0,0.2); animation: fadeInUp 0.3s; }
+        @keyframes fadeInUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+        @media (max-width: 800px) { .dashboard-row { grid-template-columns: 1fr; } .search-sort { margin-top: 10px; } }
     </style>
 </head>
 <body>
 
 <div id="authOverlay">
     <div class="auth-card">
-        <h2><i class="fas fa-globe"></i> GlobalScope News</h2>
-        <p style="margin-bottom: 20px;">Secure access to world news + auto‑loaded videos & text</p>
+        <h2><i class="fas fa-newspaper"></i> GlobalScope News+</h2>
+        <p style="margin-bottom: 20px;">AI-powered worldwide hub | Video & Text</p>
         <div id="authTabs">
             <div id="loginView">
-                <input type="text" id="loginUsername" placeholder="Username" autocomplete="username">
-                <input type="password" id="loginPassword" placeholder="Password" autocomplete="current-password">
+                <input type="text" id="loginUsername" placeholder="Username">
+                <input type="password" id="loginPassword" placeholder="Password">
                 <div id="loginError" class="error-msg"></div>
-                <button id="doLoginBtn">Login <i class="fas fa-arrow-right"></i></button>
-                <div class="switch-auth" id="goToSignup">Don't have an account? Sign up</div>
+                <button id="doLoginBtn"><i class="fas fa-sign-in-alt"></i> Login</button>
+                <div class="switch-auth" id="goToSignup">Create free account →</div>
             </div>
             <div id="signupView" style="display:none;">
                 <input type="text" id="signupUsername" placeholder="Username">
                 <input type="password" id="signupPassword" placeholder="Password (min 6 chars)">
                 <div id="signupError" class="error-msg"></div>
-                <button id="doSignupBtn">Create Account</button>
+                <button id="doSignupBtn"><i class="fas fa-user-plus"></i> Sign Up</button>
                 <div class="switch-auth" id="goToLogin">← Back to Login</div>
             </div>
         </div>
@@ -215,437 +279,307 @@
 
 <div id="mainApp">
     <div class="header">
-        <div class="logo"><h1>🌍 GlobalScope <span>Live Auto‑News Hub</span></h1></div>
-        <div class="user-info"><span id="currentUser"></span><button id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button></div>
+        <div class="logo"><h1>🌍 GlobalScope <span>Live + AI Curation</span></h1></div>
+        <div class="user-info"><span id="currentUser"></span><button id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Exit</button></div>
+    </div>
+
+    <!-- Stats Bar -->
+    <div class="stats-bar">
+        <div class="stat-card"><div class="stat-icon"><i class="fas fa-newspaper"></i></div><div class="stat-info"><h4>Total News</h4><p id="totalNewsCount">0</p></div></div>
+        <div class="stat-card"><div class="stat-icon"><i class="fas fa-video"></i></div><div class="stat-info"><h4>Video Stories</h4><p id="videoCount">0</p></div></div>
+        <div class="stat-card"><div class="stat-icon"><i class="fas fa-bookmark"></i></div><div class="stat-info"><h4>Bookmarks</h4><p id="bookmarkCount">0</p></div></div>
+        <div class="stat-card"><div class="stat-icon"><i class="fas fa-chart-line"></i></div><div class="stat-info"><h4>Categories</h4><p id="categoryCount">6</p></div></div>
     </div>
 
     <div class="filters">
         <div class="cat-buttons" id="categoryFilter">
             <button data-cat="all" class="cat-btn active">All</button>
             <button data-cat="politics" class="cat-btn">Politics</button>
-            <button data-cat="technology" class="cat-btn">Technology</button>
+            <button data-cat="technology" class="cat-btn">Tech</button>
             <button data-cat="business" class="cat-btn">Business</button>
             <button data-cat="health" class="cat-btn">Health</button>
             <button data-cat="sports" class="cat-btn">Sports</button>
             <button data-cat="entertainment" class="cat-btn">Entertainment</button>
         </div>
         <div class="media-group" id="mediaToggle">
-            <button data-media="all" class="media-btn active">📰 All Media</button>
-            <button data-media="text" class="media-btn">📄 Text Articles</button>
-            <button data-media="video" class="media-btn">🎥 Video Stories</button>
+            <button data-media="all" class="media-btn active">📰 All</button>
+            <button data-media="text" class="media-btn">📄 Text</button>
+            <button data-media="video" class="media-btn">🎥 Video</button>
+        </div>
+        <div class="search-sort">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" placeholder="Search news...">
+            <select id="sortSelect"><option value="newest">Latest first</option><option value="oldest">Oldest first</option><option value="title">Title A-Z</option></select>
         </div>
     </div>
 
-    <div id="newsContainer" class="news-grid">
-        <div class="loader"><i class="fas fa-spinner fa-pulse"></i> Loading latest news from worldwide sources...</div>
+    <div id="newsContainer" class="news-grid"><div class="loader"><i class="fas fa-spinner fa-pulse"></i> Loading intelligence feed...</div></div>
+
+    <!-- Analytics + Trending + History -->
+    <div class="dashboard-row">
+        <div class="analytics-card">
+            <h3><i class="fas fa-chart-pie"></i> Category Insights</h3>
+            <canvas id="categoryChart" width="400" height="250" style="max-height: 250px; width:100%"></canvas>
+        </div>
+        <div class="trending-card">
+            <h3><i class="fas fa-fire"></i> Trending Topics</h3>
+            <div id="trendingTags" class="trending-tags">Loading trends...</div>
+        </div>
     </div>
 
     <div class="history-panel">
         <div class="history-header">
-            <h3><i class="fas fa-history"></i> Your Reading/Watching History</h3>
-            <button id="clearHistoryBtn" class="clear-history"><i class="fas fa-trash-alt"></i> Clear History</button>
+            <h3><i class="fas fa-history"></i> 📖 Your Reading/Watching History</h3>
+            <button id="clearHistoryBtn" class="clear-history"><i class="fas fa-trash-alt"></i> Clear</button>
         </div>
         <div id="historyList" class="history-list">History will appear here...</div>
     </div>
-    <footer>© 2025 GlobalScope — Real-time RSS feeds + simulated video & text auto‑ingestion. Secured JWT + persistent storage. News auto‑refreshes every 90s.</footer>
+    <footer>© 2025 GlobalScope — Auto RSS sync + video ingestion | Bookmarks & Analytics | Real-time worldwide</footer>
 </div>
 
 <script>
-    // ======================= PRODUCTION-READY AUTO-LOADING NEWS SYSTEM =======================
-    // Features: JWT-like auth, persistent MongoDB-ready storage (localStorage with schema),
-    // Auto-fetch from real RSS feeds (BBC, NYT, TechCrunch), mixed video/text seeds, dynamic updates,
-    // full history per user, category/media filters, and periodic sync.
-    
-    // ---------- STORAGE & STATE ----------
-    const STORAGE = {
-        users: 'globalscope_users_v2',
-        news: 'globalscope_news_v2',
-        history: 'globalscope_history_v2',
-        sessions: 'globalscope_session'
-    };
-    
+    // ------------------- ENHANCED PRODUCTION FEATURES -------------------
+    // New: Bookmarks, Search, Sort, Category Chart, Trending Topics, Stats
+    const STORAGE = { users: 'gs_users', news: 'gs_news', history: 'gs_history', sessions: 'gs_session', bookmarks: 'gs_bookmarks' };
     let currentUser = null;
-    let globalNews = [];        // master news array
-    let activeCategory = 'all';
-    let activeMedia = 'all';
-    let refreshInterval = null;
+    let globalNews = [];
+    let activeCategory = 'all', activeMedia = 'all', searchQuery = '', sortBy = 'newest';
+    let bookmarksMap = new Set();
+    let chartInstance = null;
 
-    // Helper: simple hash for passwords (in production use bcrypt, this is frontend demo with secure mindset)
-    const hashPassword = (pwd) => btoa(`globalscope_${pwd}_salt2025!`);
-    
-    // Initialize DB with seed data + real RSS integration later
-    function initDatabase() {
-        if (!localStorage.getItem(STORAGE.users)) {
-            localStorage.setItem(STORAGE.users, JSON.stringify([]));
-        }
-        if (!localStorage.getItem(STORAGE.news)) {
-            const seedNews = generateRichSeedNews();
-            localStorage.setItem(STORAGE.news, JSON.stringify(seedNews));
-        }
-        if (!localStorage.getItem(STORAGE.history)) {
-            localStorage.setItem(STORAGE.history, JSON.stringify({}));
-        }
+    // Helper functions
+    const hashPass = (pwd) => btoa(`gs_${pwd}_secure`);
+
+    function initDB() {
+        if (!localStorage.getItem(STORAGE.users)) localStorage.setItem(STORAGE.users, JSON.stringify([]));
+        if (!localStorage.getItem(STORAGE.news)) localStorage.setItem(STORAGE.news, JSON.stringify(generateSeedNews()));
+        if (!localStorage.getItem(STORAGE.history)) localStorage.setItem(STORAGE.history, JSON.stringify({}));
+        if (!localStorage.getItem(STORAGE.bookmarks)) localStorage.setItem(STORAGE.bookmarks, JSON.stringify({}));
         globalNews = JSON.parse(localStorage.getItem(STORAGE.news));
     }
 
-    // Generate initial high-quality mixed content (text + video)
-    function generateRichSeedNews() {
-        const categories = ['politics', 'technology', 'business', 'health', 'sports', 'entertainment'];
-        const videoTitles = {
-            politics: ["🔴 LIVE: Global Climate Summit Address", "Exclusive: Election Integrity Debate", "Diplomatic Talks in Geneva"],
-            technology: ["📱 Next-Gen AI Breakthrough 2025", "Hands-On: Future of Quantum Computing", "SpaceX Starship Update"],
-            business: ["📈 Stock Market Rally Analysis", "Crypto Revolution: What's Next?", "Global Supply Chain Fix"],
-            health: ["🧬 New mRNA Vaccine Breakthrough", "WHO Press Briefing", "Mental Health Awareness Campaign"],
-            sports: ["⚽ Champions League Highlights", "🏀 NBA Finals Game Analysis", "Olympic Gold Medal Moments"],
-            entertainment: ["🎬 Marvel Studios Special Look", "Grammys 2025 Backstage", "Netflix独家新片预告"]
-        };
-        const textTitles = {
-            politics: ["Senate Passes Historic Infrastructure Bill", "Election Reform Updates Worldwide", "New Trade Agreement Signed"],
-            technology: ["AI Ethics Framework Released", "5G Expansion Reaches Rural Areas", "Cybersecurity Threats on Rise"],
-            business: ["Startup Funding Hits All-Time High", "Federal Reserve Interest Decision", "Global M&A Activity Surges"],
-            health: ["Breakthrough Alzheimer's Drug Approved", "Pandemic Preparedness Plan", "WHO Declares New Health Initiative"],
-            sports: ["World Cup Qualifiers: Shocking Upset", "Tennis Grand Slam Final Preview", "Marathon World Record Broken"],
-            entertainment: ["Top Grossing Movie of the Year", "Music Festival Goes Virtual", "Streaming Wars: New Contender"]
-        };
-        let newsArray = [];
-        let idCounter = 1;
-        // 30 text articles, 18 videos
-        for (let i = 0; i < 30; i++) {
-            let cat = categories[i % categories.length];
-            let titleList = textTitles[cat];
-            let isVideo = false;
-            let mediaUrl = `https://picsum.photos/id/${(i * 7) % 100 + 50}/500/280`;
-            let source = ["Reuters", "AP News", "BBC", "Al Jazeera", "CNN", "The Guardian"][i % 6];
-            newsArray.push({
-                id: `news_${Date.now()}_${idCounter++}`,
-                title: titleList[i % titleList.length] + ` — ${new Date().toLocaleDateString()}`,
-                description: `In-depth coverage: ${titleList[i % titleList.length]}. Expert analysis and exclusive reports from global correspondents.`,
+    function generateSeedNews() {
+        const cats = ['politics','technology','business','health','sports','entertainment'];
+        const newsArr = [];
+        for (let i=0;i<42;i++) {
+            let cat = cats[i%6];
+            let isVideo = (i%4 === 0);
+            let titleBase = isVideo ? `📺 Exclusive: ${cat} update ${i+1}` : `📰 ${cat} report: key insights ${i+1}`;
+            newsArr.push({
+                id: `item_${Date.now()}_${i}`,
+                title: `${titleBase} - ${new Date().toLocaleDateString()}`,
+                description: `Full coverage of top ${cat} stories with expert analysis. ${isVideo ? 'Watch the full video report inside.' : 'Read the full article.'}`,
                 category: cat,
-                mediaType: 'text',
-                mediaUrl: mediaUrl,
-                source: source,
-                publishedAt: new Date(Date.now() - i * 7200000).toISOString(),
-                videoEmbedUrl: null
+                mediaType: isVideo ? 'video' : 'text',
+                mediaUrl: isVideo ? `https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=0` : `https://picsum.photos/id/${i+100}/500/300`,
+                source: ["Reuters","AP","BBC","CNN","Al Jazeera"][i%5],
+                publishedAt: new Date(Date.now() - i*3600000).toISOString()
             });
         }
-        for (let i = 0; i < 18; i++) {
-            let cat = categories[i % categories.length];
-            let titleList = videoTitles[cat];
-            let videoDemoUrl = `https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=0&rel=0`; // placeholder, but we will map to legit content
-            newsArray.push({
-                id: `video_${Date.now()}_${idCounter++}`,
-                title: titleList[i % titleList.length] + " (Video Story)",
-                description: `🎥 Watch full coverage: ${titleList[i % titleList.length]}. GlobalScope exclusive video report with real footage.`,
-                category: cat,
-                mediaType: 'video',
-                mediaUrl: videoDemoUrl,
-                source: "GlobalScope Video / Reuters TV",
-                publishedAt: new Date(Date.now() - i * 5400000).toISOString(),
-                videoEmbedUrl: videoDemoUrl
-            });
-        }
-        return newsArray.sort((a,b) => new Date(b.publishedAt) - new Date(a.publishedAt));
+        return newsArr;
     }
 
-    // Real RSS feed auto-loader (production-ready: fetches live news from trusted sources)
-    async function fetchLiveRSSAndMerge() {
-        const corsProxy = 'https://api.allorigins.win/raw?url=';
-        const feedSources = [
-            { url: 'https://feeds.bbci.co.uk/news/world/rss.xml', catFallback: 'politics' },
-            { url: 'https://rss.nytimes.com/services/xml/rss/nyt/Technology.xml', catFallback: 'technology' },
-            { url: 'https://techcrunch.com/feed/', catFallback: 'technology' },
-            { url: 'https://feeds.bloomberg.com/markets/news.rss', catFallback: 'business' }
-        ];
-        let newArticles = [];
-        for (const feed of feedSources) {
-            try {
-                const response = await fetch(corsProxy + encodeURIComponent(feed.url));
-                const xmlText = await response.text();
-                const parser = new DOMParser();
-                const xmlDoc = parser.parseFromString(xmlText, "text/xml");
-                const items = xmlDoc.querySelectorAll("item");
-                items.forEach((item, idx) => {
-                    if (idx >= 4) return;
-                    let title = item.querySelector("title")?.textContent || "Breaking News";
-                    let link = item.querySelector("link")?.textContent || "#";
-                    let pubDateRaw = item.querySelector("pubDate")?.textContent || new Date().toISOString();
-                    let description = item.querySelector("description")?.textContent?.substring(0, 200) || "Read more at source.";
-                    let guessedCategory = feed.catFallback;
-                    if (title.toLowerCase().includes("sport")) guessedCategory = "sports";
-                    if (title.toLowerCase().includes("health")) guessedCategory = "health";
-                    if (title.toLowerCase().includes("entertain")) guessedCategory = "entertainment";
-                    newArticles.push({
-                        id: `rss_${Date.now()}_${Math.random()}`,
-                        title: title.substring(0, 120),
-                        description: description.replace(/<[^>]*>/g, '').substring(0, 180),
-                        category: guessedCategory,
-                        mediaType: 'text',
-                        mediaUrl: `https://picsum.photos/id/${Math.floor(Math.random() * 100) + 200}/500/280`,
-                        source: new URL(feed.url).hostname.replace('www.', ''),
-                        publishedAt: new Date(pubDateRaw).toISOString(),
-                        isExternal: true
-                    });
+    // RSS Auto Loader
+    async function fetchRSSAndMerge() {
+        const proxy = 'https://api.allorigins.win/raw?url=';
+        const feeds = [{url:'https://feeds.bbci.co.uk/news/world/rss.xml',cat:'politics'},{url:'https://techcrunch.com/feed/',cat:'technology'}];
+        let newItems = [];
+        for(let feed of feeds){
+            try{
+                let resp = await fetch(proxy+encodeURIComponent(feed.url));
+                let txt = await resp.text();
+                let parser = new DOMParser();
+                let xml = parser.parseFromString(txt,"text/xml");
+                xml.querySelectorAll("item").forEach((item,idx)=>{
+                    if(idx>2) return;
+                    let title = item.querySelector("title")?.textContent?.slice(0,100) || "News";
+                    newItems.push({ id:`rss_${Date.now()}_${idx}`, title:title, description:`From ${feed.url} – global coverage`, category:feed.cat, mediaType:'text', mediaUrl:`https://picsum.photos/id/${Math.floor(Math.random()*200)}/500/300`, source:new URL(feed.url).hostname, publishedAt:new Date().toISOString() });
                 });
-            } catch (err) {
-                console.warn("RSS fetch warning for", feed.url, err);
-            }
+            }catch(e){}
         }
-        if (newArticles.length > 0) {
-            let currentNews = JSON.parse(localStorage.getItem(STORAGE.news));
-            let existingIds = new Set(currentNews.map(n => n.id));
-            let uniqueNew = newArticles.filter(art => !existingIds.has(art.id));
-            if (uniqueNew.length) {
-                let merged = [...uniqueNew, ...currentNews];
-                merged = merged.slice(0, 180); // keep recent max
-                localStorage.setItem(STORAGE.news, JSON.stringify(merged));
-                globalNews = merged;
-                if (currentUser) renderNewsFeed();
-                showToast(`📡 ${uniqueNew.length} new live articles auto-loaded from global sources`);
-            }
+        if(newItems.length){
+            let curr = JSON.parse(localStorage.getItem(STORAGE.news));
+            let merged = [...newItems, ...curr].slice(0,180);
+            localStorage.setItem(STORAGE.news, JSON.stringify(merged));
+            globalNews = merged;
+            if(currentUser) refreshUI();
+            showToast(`📡 ${newItems.length} fresh stories loaded`);
         }
     }
 
-    // Simulate video ingestion from external video APIs (production: you can link YouTube channels or news video RSS)
-    // This function dynamically generates fresh video news items to keep video feed current
-    function autoGenerateVideoNews() {
-        const videoCategories = ['politics', 'technology', 'business', 'health', 'sports', 'entertainment'];
-        const videoSources = ["Global Video Desk", "Reuters Visuals", "AP Video News", "Bloomberg Quicktake"];
-        const newVideos = [];
-        const currentNews = JSON.parse(localStorage.getItem(STORAGE.news));
-        const existingIds = new Set(currentNews.map(n => n.id));
-        // Add up to 2 fresh video stories every refresh cycle (only if less than 15 video items added recently)
-        for (let i = 0; i < 2; i++) {
-            let cat = videoCategories[Math.floor(Math.random() * videoCategories.length)];
-            let vidTitle = `📺 LIVE: ${["Breaking Event", "Exclusive Report", "Analysis", "Press Conference"][Math.floor(Math.random()*4)]} - ${cat.toUpperCase()} Update ${new Date().toLocaleTimeString()}`;
-            let videoEmbed = `https://www.youtube.com/embed/${Math.random().toString(36).substring(2,8)}?autoplay=0`; // generic embed, but in prod fetch real video IDs
-            let newId = `autovid_${Date.now()}_${i}`;
-            if (!existingIds.has(newId)) {
-                newVideos.push({
-                    id: newId,
-                    title: vidTitle,
-                    description: `🎬 New video coverage: top headlines from ${cat} sector. Expert interviews and real-time footage.`,
-                    category: cat,
-                    mediaType: 'video',
-                    mediaUrl: videoEmbed,
-                    source: videoSources[i % videoSources.length],
-                    publishedAt: new Date().toISOString(),
-                    videoEmbedUrl: videoEmbed
-                });
-            }
-        }
-        if (newVideos.length) {
-            let updated = [...newVideos, ...currentNews];
-            updated = updated.slice(0, 200);
-            localStorage.setItem(STORAGE.news, JSON.stringify(updated));
-            globalNews = updated;
-            if (currentUser) renderNewsFeed();
-            showToast(`🎥 ${newVideos.length} new video story auto-inserted`);
+    function autoVideoInject(){
+        let curr = JSON.parse(localStorage.getItem(STORAGE.news));
+        let newVid = { id:`vid_${Date.now()}`, title:`🎬 LIVE: Breaking Now ${new Date().toLocaleTimeString()}`, description:"New video report just arrived.", category:['politics','tech','sports'][Math.floor(Math.random()*3)], mediaType:'video', mediaUrl:`https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=0`, source:"Global Video Desk", publishedAt:new Date().toISOString() };
+        if(!curr.some(n=>n.id===newVid.id)){
+            curr.unshift(newVid);
+            localStorage.setItem(STORAGE.news, JSON.stringify(curr));
+            globalNews = curr;
+            if(currentUser) refreshUI();
+            showToast("🎥 New video story added");
         }
     }
 
-    // background auto-refresh: fetch RSS and generate video content every 90 seconds
-    function startAutoRefresh() {
-        if (refreshInterval) clearInterval(refreshInterval);
-        refreshInterval = setInterval(async () => {
-            if (currentUser) {
-                await fetchLiveRSSAndMerge();
-                autoGenerateVideoNews();
-            }
-        }, 90000); // 90 seconds production-ready interval
+    // Bookmarks
+    function loadBookmarks(){
+        let b = JSON.parse(localStorage.getItem(STORAGE.bookmarks));
+        bookmarksMap = new Set(b[currentUser?.username] || []);
+        updateBookmarkUI();
+    }
+    function toggleBookmark(newsId){
+        if(!currentUser) return;
+        let b = JSON.parse(localStorage.getItem(STORAGE.bookmarks));
+        if(!b[currentUser.username]) b[currentUser.username]=[];
+        if(bookmarksMap.has(newsId)){ bookmarksMap.delete(newsId); b[currentUser.username] = b[currentUser.username].filter(id=>id!==newsId); showToast("Removed bookmark"); }
+        else { bookmarksMap.add(newsId); b[currentUser.username].push(newsId); showToast("📌 Bookmarked"); }
+        localStorage.setItem(STORAGE.bookmarks, JSON.stringify(b));
+        updateBookmarkUI(); refreshUI();
+    }
+    function updateBookmarkUI(){ document.getElementById('bookmarkCount').innerText = bookmarksMap.size; }
+
+    // Stats & Chart
+    function updateStats(){
+        document.getElementById('totalNewsCount').innerText = globalNews.length;
+        document.getElementById('videoCount').innerText = globalNews.filter(n=>n.mediaType==='video').length;
+    }
+    function renderCategoryChart(){
+        let cats = ['politics','technology','business','health','sports','entertainment'];
+        let counts = cats.map(c=>globalNews.filter(n=>n.category===c).length);
+        let ctx = document.getElementById('categoryChart').getContext('2d');
+        if(chartInstance) chartInstance.destroy();
+        chartInstance = new Chart(ctx, { type:'doughnut', data:{ labels:cats.map(c=>c.toUpperCase()), datasets:[{ data:counts, backgroundColor:['#0f3b5c','#2c6e9e','#4a90b0','#6ba5b5','#8fb9c5','#b2d0db'], borderWidth:0 }] }, options:{ responsive:true, maintainAspectRatio:true, plugins:{ legend:{ position:'bottom' } } } });
+    }
+    function getTrendingTopics(){
+        let allWords = globalNews.flatMap(n=> n.title.toLowerCase().split(' ').filter(w=>w.length>4));
+        let freq = new Map();
+        allWords.forEach(w=>freq.set(w, (freq.get(w)||0)+1));
+        let top = Array.from(freq.entries()).sort((a,b)=>b[1]-a[1]).slice(0,8);
+        document.getElementById('trendingTags').innerHTML = top.map(t=>`<span class="trending-tag"><i class="fas fa-hashtag"></i> ${t[0]}</span>`).join('');
     }
 
-    // Helper toast
-    function showToast(msg) {
-        let toast = document.createElement('div');
-        toast.className = 'toast-msg';
-        toast.innerHTML = `<i class="fas fa-info-circle"></i> ${msg}`;
-        document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), 2800);
-    }
-
-    // Render news grid with video/text differentiation
-    function renderNewsFeed() {
-        if (!globalNews.length) {
-            document.getElementById('newsContainer').innerHTML = '<div class="loader">No news available. Refresh soon.</div>';
-            return;
+    // History
+    function addToHistory(newsItem){
+        if(!currentUser) return;
+        let hist = JSON.parse(localStorage.getItem(STORAGE.history));
+        if(!hist[currentUser.username]) hist[currentUser.username]=[];
+        if(!hist[currentUser.username].some(h=>h.id===newsItem.id)){
+            hist[currentUser.username].unshift({...newsItem, viewedAt:new Date().toISOString()});
+            if(hist[currentUser.username].length>40) hist[currentUser.username].pop();
+            localStorage.setItem(STORAGE.history, JSON.stringify(hist));
+            renderHistory();
         }
-        let filtered = globalNews.filter(item => {
-            if (activeCategory !== 'all' && item.category !== activeCategory) return false;
-            if (activeMedia === 'text' && item.mediaType !== 'text') return false;
-            if (activeMedia === 'video' && item.mediaType !== 'video') return false;
+    }
+    function renderHistory(){
+        let hist = JSON.parse(localStorage.getItem(STORAGE.history));
+        let userHist = hist[currentUser?.username] || [];
+        let container = document.getElementById('historyList');
+        if(userHist.length===0){ container.innerHTML='<div style="padding:20px;text-align:center;">✨ Click news cards to build history</div>'; return; }
+        container.innerHTML = userHist.map(h=>`<div class="history-item"><div><strong>${escapeHtml(h.title.slice(0,70))}</strong><br><small>${h.category} | ${new Date(h.viewedAt).toLocaleString()}</small></div><i class="fas fa-eye"></i></div>`).join('');
+    }
+    function clearHistory(){ if(currentUser){ let hist={}; hist[currentUser.username]=[]; localStorage.setItem(STORAGE.history, JSON.stringify(hist)); renderHistory(); showToast("History cleared"); } }
+
+    // Render News with search/sort
+    function refreshUI(){
+        if(!globalNews.length) return;
+        let filtered = globalNews.filter(n=>{
+            if(activeCategory!=='all' && n.category!==activeCategory) return false;
+            if(activeMedia==='text' && n.mediaType!=='text') return false;
+            if(activeMedia==='video' && n.mediaType!=='video') return false;
+            if(searchQuery && !n.title.toLowerCase().includes(searchQuery) && !n.description.toLowerCase().includes(searchQuery)) return false;
             return true;
         });
-        filtered.sort((a,b) => new Date(b.publishedAt) - new Date(a.publishedAt));
-        const container = document.getElementById('newsContainer');
-        if (filtered.length === 0) {
-            container.innerHTML = '<div class="loader">📭 No matching news. Try different filters.</div>';
-            return;
-        }
-        container.innerHTML = filtered.map(news => {
-            const isVideo = news.mediaType === 'video';
-            const mediaHtml = isVideo ? 
-                `<div class="video-placeholder"><i class="fas fa-play-circle" style="font-size: 52px; margin-bottom: 8px;"></i><span>🎬 Video Report</span><small style="opacity:0.7">Click to watch</small></div>` :
-                `<img class="card-media" src="${news.mediaUrl}" alt="news visual" loading="lazy" onerror="this.src='https://placehold.co/500x280?text=News+Image'">`;
-            return `
-                <div class="news-card" data-id="${news.id}">
-                    ${mediaHtml}
-                    <div class="card-content">
-                        <div class="card-category">${news.category.toUpperCase()} ${isVideo ? '<span class="video-badge"><i class="fas fa-video"></i> VIDEO</span>' : '<span style="background:#334155; display:inline-block; padding:2px 8px; border-radius:20px; font-size:0.7rem; margin-left:6px;">TEXT</span>'}</div>
-                        <div class="card-title">${escapeHtml(news.title)}</div>
-                        <div class="card-desc">${escapeHtml(news.description.substring(0, 110))}...</div>
-                        <div class="card-meta"><span><i class="fas fa-newspaper"></i> ${news.source}</span><span><i class="far fa-calendar-alt"></i> ${new Date(news.publishedAt).toLocaleDateString()}</span></div>
-                    </div>
+        if(sortBy==='newest') filtered.sort((a,b)=>new Date(b.publishedAt)-new Date(a.publishedAt));
+        else if(sortBy==='oldest') filtered.sort((a,b)=>new Date(a.publishedAt)-new Date(b.publishedAt));
+        else if(sortBy==='title') filtered.sort((a,b)=>a.title.localeCompare(b.title));
+        let container = document.getElementById('newsContainer');
+        if(filtered.length===0){ container.innerHTML='<div class="loader">No news match.</div>'; return; }
+        container.innerHTML = filtered.map(news=>{
+            let isVideo = news.mediaType==='video';
+            let isBookmarked = bookmarksMap.has(news.id);
+            return `<div class="news-card" data-id="${news.id}">
+                ${isVideo ? `<div class="video-placeholder"><i class="fas fa-play-circle" style="font-size:48px;"></i><span>🎬 Video Report</span></div>` : `<img class="card-media" src="${news.mediaUrl}" loading="lazy" onerror="this.src='https://placehold.co/500x280?text=News'">`}
+                <div class="card-content">
+                    <div class="card-category">${news.category.toUpperCase()} ${isVideo?'<span class="video-badge"><i class="fas fa-video"></i> VIDEO</span>':'<span style="background:#e2e8f0;padding:2px 8px;border-radius:20px;">📄 TEXT</span>'} <i class="fas fa-bookmark bookmark-icon ${isBookmarked ? 'active' : ''}" data-id="${news.id}"></i></div>
+                    <div class="card-title">${escapeHtml(news.title)}</div>
+                    <div class="card-desc">${escapeHtml(news.description.slice(0,110))}...</div>
+                    <div class="card-meta"><span><i class="fas fa-globe"></i> ${news.source}</span><span><i class="far fa-clock"></i> ${new Date(news.publishedAt).toLocaleDateString()}</span></div>
                 </div>
-            `;
+            </div>`;
         }).join('');
-        // attach click handlers
-        document.querySelectorAll('.news-card').forEach(card => {
-            card.addEventListener('click', (e) => {
-                const id = card.getAttribute('data-id');
-                const newsItem = globalNews.find(n => n.id === id);
-                if (newsItem && currentUser) {
-                    addToUserHistory(currentUser.username, newsItem);
-                    if (newsItem.mediaType === 'video') {
-                        const videoWindow = window.open('', '_blank');
-                        if (videoWindow) {
-                            videoWindow.document.write(`
-                                <html><head><title>GlobalScope Video</title><style>body{margin:0;display:flex;justify-content:center;align-items:center;height:100vh;background:#000;}</style></head>
-                                <body><iframe width="90%" height="80%" src="${newsItem.mediaUrl}" frameborder="0" allowfullscreen></iframe></body></html>
-                            `);
-                        } else {
-                            alert(`🎥 Video: ${newsItem.title}\nOpen video player manually.`);
-                        }
-                    } else {
-                        alert(`📰 ${newsItem.title}\n\n${newsItem.description}\n\n🔗 Source: ${newsItem.source}\nFull article available on partner site.`);
-                    }
+        document.querySelectorAll('.news-card').forEach(card=>{
+            card.addEventListener('click',(e)=>{
+                if(e.target.classList.contains('bookmark-icon')) return;
+                let id = card.getAttribute('data-id');
+                let item = globalNews.find(n=>n.id===id);
+                if(item && currentUser){
+                    addToHistory(item);
+                    if(item.mediaType==='video'){
+                        let win = window.open('','_blank');
+                        win.document.write(`<html><head><title>Video</title><style>body{margin:0;background:#000;display:flex;height:100vh;}</style></head><body><iframe width="100%" height="100%" src="${item.mediaUrl}" frameborder="0" allowfullscreen></iframe></body></html>`);
+                    } else alert(`📖 ${item.title}\n\n${item.description}`);
                 }
             });
         });
+        document.querySelectorAll('.bookmark-icon').forEach(icon=>{
+            icon.addEventListener('click',(e)=>{
+                e.stopPropagation();
+                let newsId = icon.getAttribute('data-id');
+                toggleBookmark(newsId);
+                refreshUI();
+            });
+        });
+        updateStats(); renderCategoryChart(); getTrendingTopics();
     }
 
-    function escapeHtml(str) { return str.replace(/[&<>]/g, function(m){if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
+    function escapeHtml(str){ return str.replace(/[&<>]/g, function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[m];}); }
+    function showToast(msg){ let t=document.createElement('div'); t.className='toast-msg'; t.innerHTML=`<i class="fas fa-bell"></i> ${msg}`; document.body.appendChild(t); setTimeout(()=>t.remove(),2500); }
 
-    // User history functions
-    function addToUserHistory(username, newsItem) {
-        let historyDB = JSON.parse(localStorage.getItem(STORAGE.history));
-        if (!historyDB[username]) historyDB[username] = [];
-        const alreadyExists = historyDB[username].some(h => h.id === newsItem.id);
-        if (!alreadyExists) {
-            historyDB[username].unshift({ ...newsItem, viewedAt: new Date().toISOString() });
-            if (historyDB[username].length > 45) historyDB[username].pop();
-            localStorage.setItem(STORAGE.history, JSON.stringify(historyDB));
-            renderUserHistory(username);
-        }
-    }
-    function renderUserHistory(username) {
-        let historyDB = JSON.parse(localStorage.getItem(STORAGE.history));
-        let userHistory = historyDB[username] || [];
-        const historyDiv = document.getElementById('historyList');
-        if (userHistory.length === 0) {
-            historyDiv.innerHTML = '<div style="padding:20px; text-align:center; color:#64748b;">✨ Click on any news card to build your reading history.</div>';
-            return;
-        }
-        historyDiv.innerHTML = userHistory.map(h => `
-            <div class="history-item">
-                <div><strong>${escapeHtml(h.title.substring(0, 65))}</strong><br><small><i class="fas fa-tag"></i> ${h.category} | ${new Date(h.viewedAt).toLocaleString()}</small></div>
-                <i class="fas fa-eye" style="color:#0f3b5c;"></i>
-            </div>
-        `).join('');
-    }
-    function clearUserHistory(username) {
-        let historyDB = JSON.parse(localStorage.getItem(STORAGE.history));
-        historyDB[username] = [];
-        localStorage.setItem(STORAGE.history, JSON.stringify(historyDB));
-        renderUserHistory(username);
-        showToast("History cleared.");
-    }
-
-    // Auth logic
-    function register(username, password) {
-        let users = JSON.parse(localStorage.getItem(STORAGE.users));
-        if (users.find(u => u.username === username)) throw new Error("Username already taken");
-        if (password.length < 6) throw new Error("Password must be at least 6 characters");
-        users.push({ username, passwordHash: hashPassword(password), createdAt: new Date().toISOString() });
-        localStorage.setItem(STORAGE.users, JSON.stringify(users));
+    // Auth
+    function register(u,p){
+        let users=JSON.parse(localStorage.getItem(STORAGE.users));
+        if(users.find(x=>x.username===u)) throw new Error("Exists");
+        if(p.length<6) throw new Error("Min 6 chars");
+        users.push({username:u, passwordHash:hashPass(p)});
+        localStorage.setItem(STORAGE.users,JSON.stringify(users));
         return true;
     }
-    function login(username, password) {
-        let users = JSON.parse(localStorage.getItem(STORAGE.users));
-        const user = users.find(u => u.username === username && u.passwordHash === hashPassword(password));
-        if (!user) throw new Error("Invalid username or password");
-        const sessionToken = btoa(`${username}:${Date.now()}:secure`);
-        localStorage.setItem(STORAGE.sessions, sessionToken);
-        return { username };
+    function login(u,p){
+        let users=JSON.parse(localStorage.getItem(STORAGE.users));
+        let user=users.find(x=>x.username===u && x.passwordHash===hashPass(p));
+        if(!user) throw new Error("Invalid");
+        let token=btoa(`${u}:${Date.now()}`);
+        localStorage.setItem(STORAGE.sessions,token);
+        return {username:u};
     }
-    function getCurrentSession() {
-        const token = localStorage.getItem(STORAGE.sessions);
-        if (!token) return null;
-        try {
-            const decoded = atob(token);
-            const username = decoded.split(':')[0];
-            let users = JSON.parse(localStorage.getItem(STORAGE.users));
-            if (users.find(u => u.username === username)) return username;
-        } catch(e) { return null; }
-        return null;
-    }
+    function getSession(){ let t=localStorage.getItem(STORAGE.sessions); if(!t) return null; try{ let u=atob(t).split(':')[0]; let users=JSON.parse(localStorage.getItem(STORAGE.users)); if(users.find(x=>x.username===u)) return u; }catch(e){} return null; }
 
-    function showAppUI(user) {
-        currentUser = { username: user };
-        document.getElementById('authOverlay').style.display = 'none';
-        document.getElementById('mainApp').style.display = 'block';
-        document.getElementById('currentUser').innerHTML = `<i class="fas fa-user-shield"></i> ${user.username}`;
-        renderNewsFeed();
-        renderUserHistory(user.username);
-        startAutoRefresh();
-        // initial external fetch
-        fetchLiveRSSAndMerge().then(() => autoGenerateVideoNews());
+    function showApp(user){
+        currentUser={username:user};
+        document.getElementById('authOverlay').style.display='none';
+        document.getElementById('mainApp').style.display='block';
+        document.getElementById('currentUser').innerHTML=`<i class="fas fa-user-circle"></i> ${user}`;
+        loadBookmarks();
+        refreshUI();
+        renderHistory();
+        setInterval(()=>{ if(currentUser){ fetchRSSAndMerge(); autoVideoInject(); } }, 110000);
+        fetchRSSAndMerge();
     }
 
     // Event listeners
-    document.getElementById('doLoginBtn').onclick = () => {
-        const user = document.getElementById('loginUsername').value.trim();
-        const pwd = document.getElementById('loginPassword').value;
-        try {
-            const logged = login(user, pwd);
-            showAppUI(logged);
-        } catch(err) { document.getElementById('loginError').innerText = err.message; }
-    };
-    document.getElementById('doSignupBtn').onclick = () => {
-        const user = document.getElementById('signupUsername').value.trim();
-        const pwd = document.getElementById('signupPassword').value;
-        try {
-            register(user, pwd);
-            alert("✅ Account created! Please login.");
-            document.getElementById('goToLogin').click();
-        } catch(err) { document.getElementById('signupError').innerText = err.message; }
-    };
-    document.getElementById('goToSignup').onclick = () => { document.getElementById('loginView').style.display='none'; document.getElementById('signupView').style.display='block'; };
-    document.getElementById('goToLogin').onclick = () => { document.getElementById('signupView').style.display='none'; document.getElementById('loginView').style.display='block'; };
-    document.getElementById('logoutBtn').onclick = () => { localStorage.removeItem(STORAGE.sessions); location.reload(); };
-    document.getElementById('clearHistoryBtn').onclick = () => { if(currentUser) clearUserHistory(currentUser.username); };
-    document.querySelectorAll('.cat-btn').forEach(btn => btn.addEventListener('click', (e) => {
-        document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
-        btn.classList.add('active');
-        activeCategory = btn.getAttribute('data-cat');
-        renderNewsFeed();
-    }));
-    document.querySelectorAll('.media-btn').forEach(btn => btn.addEventListener('click', (e) => {
-        document.querySelectorAll('.media-btn').forEach(b=>b.classList.remove('active'));
-        btn.classList.add('active');
-        activeMedia = btn.getAttribute('data-media');
-        renderNewsFeed();
-    }));
+    document.getElementById('doLoginBtn').onclick=()=>{ try{ let u=document.getElementById('loginUsername').value; let p=document.getElementById('loginPassword').value; let res=login(u,p); showApp(res.username); }catch(e){ document.getElementById('loginError').innerText=e.message; } };
+    document.getElementById('doSignupBtn').onclick=()=>{ try{ let u=document.getElementById('signupUsername').value; let p=document.getElementById('signupPassword').value; register(u,p); alert("Account created! Login."); document.getElementById('goToLogin').click(); }catch(e){ document.getElementById('signupError').innerText=e.message; } };
+    document.getElementById('goToSignup').onclick=()=>{ document.getElementById('loginView').style.display='none'; document.getElementById('signupView').style.display='block'; };
+    document.getElementById('goToLogin').onclick=()=>{ document.getElementById('signupView').style.display='none'; document.getElementById('loginView').style.display='block'; };
+    document.getElementById('logoutBtn').onclick=()=>{ localStorage.removeItem(STORAGE.sessions); location.reload(); };
+    document.getElementById('clearHistoryBtn').onclick=()=>{ clearHistory(); };
+    document.querySelectorAll('.cat-btn').forEach(b=>b.addEventListener('click',()=>{ document.querySelectorAll('.cat-btn').forEach(c=>c.classList.remove('active')); b.classList.add('active'); activeCategory=b.getAttribute('data-cat'); refreshUI(); }));
+    document.querySelectorAll('.media-btn').forEach(b=>b.addEventListener('click',()=>{ document.querySelectorAll('.media-btn').forEach(c=>c.classList.remove('active')); b.classList.add('active'); activeMedia=b.getAttribute('data-media'); refreshUI(); }));
+    document.getElementById('searchInput').addEventListener('input',(e)=>{ searchQuery=e.target.value.toLowerCase(); refreshUI(); });
+    document.getElementById('sortSelect').addEventListener('change',(e)=>{ sortBy=e.target.value; refreshUI(); });
 
-    // Bootstrap
-    initDatabase();
-    const existingSessionUser = getCurrentSession();
-    if (existingSessionUser) {
-        showAppUI({ username: existingSessionUser });
-    } else {
-        document.getElementById('mainApp').style.display = 'none';
-        document.getElementById('authOverlay').style.display = 'flex';
-        if(localStorage.getItem(STORAGE.sessions)) localStorage.removeItem(STORAGE.sessions);
-    }
+    initDB();
+    let sess=getSession();
+    if(sess) showApp(sess);
+    else { document.getElementById('mainApp').style.display='none'; document.getElementById('authOverlay').style.display='flex'; if(localStorage.getItem(STORAGE.sessions)) localStorage.removeItem(STORAGE.sessions); }
 </script>
 </body>
 </html>
