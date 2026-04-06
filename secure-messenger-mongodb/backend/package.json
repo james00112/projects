@@ -1,0 +1,33 @@
+{
+  "name": "secure-messenger-backend",
+  "version": "1.0.0",
+  "description": "Secure messenger with MongoDB and end-to-end encryption",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "security-audit": "npm audit",
+    "db-secure": "node scripts/secureDatabase.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^7.5.0",
+    "socket.io": "^4.7.2",
+    "jsonwebtoken": "^9.0.2",
+    "bcryptjs": "^2.4.3",
+    "helmet": "^7.0.0",
+    "cors": "^2.8.5",
+    "express-rate-limit": "^6.10.0",
+    "express-mongo-sanitize": "^2.2.0",
+    "xss-clean": "^0.1.1",
+    "hpp": "^0.2.3",
+    "dotenv": "^16.3.1",
+    "joi": "^17.10.1",
+    "crypto": "^1.0.1",
+    "socket.io-client": "^4.7.2",
+    "axios": "^1.5.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
