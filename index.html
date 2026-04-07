@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>WorldView | Smooth Live TV & Video Previews — No Downloads</title>
+    <title>WorldView | In-Place Video & Live TV Previews — No Modals</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -35,12 +35,12 @@
         .news-card { background: white; overflow: hidden; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.08); border: 1px solid #eef2f6; transition: 0.25s; position: relative; }
         .news-card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.08); border-color: #cc000030; }
         .card-media { width: 100%; height: 200px; object-fit: cover; background: #eef2f6; }
-        .video-preview-container { position: relative; height: 200px; background: #0a0a0a; overflow: hidden; cursor: pointer; }
-        .video-preview-container iframe { width: 100%; height: 100%; border: none; pointer-events: none; }
-        .video-preview-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; transition: 0.2s; }
-        .video-preview-container:hover .video-preview-overlay { background: rgba(0,0,0,0.2); }
-        .play-icon { width: 60px; height: 60px; background: #cc0000; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.8rem; box-shadow: 0 4px 15px rgba(0,0,0,0.3); transition: 0.2s; cursor: pointer; }
-        .play-icon:hover { transform: scale(1.1); background: #ff1a1a; }
+        .video-player-container { position: relative; width: 100%; height: 200px; background: #0a0a0a; overflow: hidden; }
+        .video-player-container iframe, .video-player-container video { width: 100%; height: 100%; border: none; }
+        .video-placeholder { background: linear-gradient(145deg, #1a1a2e, #16213e); height: 200px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; cursor: pointer; transition: 0.2s; }
+        .video-placeholder i { font-size: 48px; margin-bottom: 10px; }
+        .video-placeholder span { font-size: 14px; font-weight: 500; }
+        .video-placeholder:hover { background: linear-gradient(145deg, #cc0000, #8b0000); }
         .live-tag { position: absolute; top: 10px; left: 10px; background: #cc0000; color: white; padding: 3px 10px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; z-index: 2; display: flex; align-items: center; gap: 5px; }
         .live-tag i { font-size: 8px; animation: pulseRed 1s infinite; }
         @keyframes pulseRed { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
@@ -69,25 +69,17 @@
         .history-item:hover, .bookmark-item:hover { background: #fafcff; }
         .toast { position: fixed; bottom: 24px; left: 24px; background: #1a2c3e; color: white; padding: 12px 24px; font-size: 0.85rem; z-index: 2000; animation: slideUp 0.3s ease; border-radius: 8px; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-        .modal-preview { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.95); z-index: 3000; display: flex; align-items: center; justify-content: center; animation: fadeIn 0.2s; }
-        .modal-content { width: 90%; max-width: 1100px; background: #000; border-radius: 12px; overflow: hidden; }
-        .modal-header { background: #1a2c3e; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; color: white; }
-        .modal-header h3 { margin: 0; font-size: 1.1rem; }
-        .modal-close { background: none; border: none; color: white; font-size: 1.8rem; cursor: pointer; padding: 0 10px; line-height: 1; }
-        .modal-close:hover { color: #cc0000; }
-        .modal-video { position: relative; padding-bottom: 56.25%; height: 0; }
-        .modal-video iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         footer { text-align: center; margin-top: 48px; padding: 24px; font-size: 0.75rem; color: #8a9bb0; border-top: 1px solid #e2e8f0; }
-        @media (max-width: 640px) { #app { padding: 0 16px 16px; } .news-grid { grid-template-columns: 1fr; } .modal-content { width: 95%; } }
+        @media (max-width: 640px) { #app { padding: 0 16px 16px; } .news-grid { grid-template-columns: 1fr; } }
         .loader { text-align: center; padding: 60px; color: #5a6874; }
-        .youtube-thumb { width: 100%; height: 200px; object-fit: cover; background: #1a1a2e; display: flex; align-items: center; justify-content: center; flex-direction: column; color: white; }
+        .watch-button { background: #cc0000; color: white; border: none; padding: 8px 16px; border-radius: 30px; font-size: 0.75rem; font-weight: 600; cursor: pointer; margin-top: 8px; transition: 0.2s; }
+        .watch-button:hover { background: #ff1a1a; transform: scale(1.02); }
     </style>
 </head>
 <body>
 <div id="app">
     <div class="header">
-        <div class="logo"><i class="fas fa-newspaper" style="font-size: 1.8rem; color: #cc0000;"></i><h1>WORLD<span>VIEW</span></h1><div class="live-badge"><i class="fas fa-circle" style="font-size: 8px;"></i> SMOOTH PREVIEWS</div></div>
+        <div class="logo"><i class="fas fa-newspaper" style="font-size: 1.8rem; color: #cc0000;"></i><h1>WORLD<span>VIEW</span></h1><div class="live-badge"><i class="fas fa-circle" style="font-size: 8px;"></i> IN-PLACE PREVIEWS</div></div>
         <div id="liveDate" style="font-size:0.8rem; color:#5a6874;"></div>
     </div>
     <div class="stats-grid">
@@ -115,16 +107,16 @@
     </div>
     <div class="bookmarks-section"><div class="section-header"><h3><i class="fas fa-bookmark"></i> SAVED STORIES</h3><button id="clearBookmarksBtn" class="clear-btn">CLEAR ALL</button></div><div id="bookmarksList" class="bookmarks-list"></div></div>
     <div class="history-section"><div class="section-header"><h3><i class="fas fa-history"></i> RECENTLY VIEWED</h3><button id="clearHistoryBtn" class="clear-btn">CLEAR</button></div><div id="historyList" class="history-list"></div></div>
-    <footer>© WORLDVIEW — Click PLAY on any video/live TV to watch in modal (no downloads). All streams open in embedded player.</footer>
+    <footer>© WORLDVIEW — Click PLAY on any video or live TV to watch directly in-place. No popups, no modals. Streams play right where they are.</footer>
 </div>
 
 <script>
-    // ================ COMPLETE DATABASE - NO DOWNLOAD POPUPS, SMOOTH PREVIEWS ================
-    const STORAGE = { history: 'worldview_history_smooth', bookmarks: 'worldview_bookmarks_smooth' };
+    // ================ IN-PLACE VIDEO PREVIEWS - NO MODALS, STAYS IN ORIGINAL PLACEHOLDER ================
+    const STORAGE = { history: 'worldview_inplace_history', bookmarks: 'worldview_inplace_bookmarks' };
     
-    // Live TV Channels with official stream URLs (these open in iframe modal, not forcing downloads)
+    // Live TV Channels with embeddable stream URLs (these will play inside the card)
     const TV_CHANNELS_DATA = [
-        { name: "CNN", country: "USA", flag: "🇺🇸", streamUrl: "https://www.cnn.com/world/live-news", embedUrl: "https://www.cnn.com/world/live-news", category: "world" },
+        { name: "CNN", country: "USA", flag: "🇺🇸", streamUrl: "https://www.cnn.com/world/live-news", embedUrl: "https://www.cnn.com/world/live-news", category: "world", embedType: "webpage" },
         { name: "Fox News", country: "USA", flag: "🇺🇸", streamUrl: "https://www.foxnews.com/live", embedUrl: "https://www.foxnews.com/live", category: "politics" },
         { name: "MSNBC", country: "USA", flag: "🇺🇸", streamUrl: "https://www.msnbc.com/live", embedUrl: "https://www.msnbc.com/live", category: "politics" },
         { name: "ABC News Live", country: "USA", flag: "🇺🇸", streamUrl: "https://abcnews.go.com/Live", embedUrl: "https://abcnews.go.com/Live", category: "world" },
@@ -146,14 +138,14 @@
         { name: "TRT World", country: "Turkey", flag: "🇹🇷", streamUrl: "https://www.trtworld.com/live", embedUrl: "https://www.trtworld.com/live", category: "world" }
     ];
 
-    // Video News (YouTube channels - will use YouTube embed for preview)
+    // Video News (YouTube and other video sources)
     const VIDEO_NEWS = [
-        { name: "CNN YouTube", country: "USA", flag: "🇺🇸", channelId: "CNN", url: "https://www.youtube.com/@CNN", embedUrl: "https://www.youtube.com/embed/?playlist=UCSX0ZpLp7S4B9yq7z1qXj5Q", category: "world" },
-        { name: "BBC News YouTube", country: "UK", flag: "🇬🇧", channelId: "BBCNews", url: "https://www.youtube.com/@BBCNews", embedUrl: "https://www.youtube.com/embed/?playlist=UC16niRr50-MSBwiO3YDb3RA", category: "world" },
-        { name: "Sky News YouTube", country: "UK", flag: "🇬🇧", channelId: "SkyNews", url: "https://www.youtube.com/@SkyNews", embedUrl: "https://www.youtube.com/embed/?playlist=UCoMdktPbSTixAyNGwb-UYkQ", category: "world" },
-        { name: "France 24 English", country: "France", flag: "🇫🇷", url: "https://www.youtube.com/@France24_en", embedUrl: "https://www.youtube.com/embed/?playlist=UCCS3R_bPkNMKvQw3-jfss5A", category: "world" },
-        { name: "DW News", country: "Germany", flag: "🇩🇪", url: "https://www.youtube.com/@dwnews", embedUrl: "https://www.youtube.com/embed/?playlist=UCknLrEdhRCp1aegoMqRaCZg", category: "world" },
-        { name: "Al Jazeera English", country: "Qatar", flag: "🇶🇦", url: "https://www.youtube.com/@AlJazeeraEnglish", embedUrl: "https://www.youtube.com/embed/?playlist=UCQNa5Nc6rGigZ8N3DnJowbg", category: "world" }
+        { name: "CNN YouTube", country: "USA", flag: "🇺🇸", videoId: "S8I9n6t2o3k", embedUrl: "https://www.youtube.com/embed/S8I9n6t2o3k?autoplay=0", category: "world" },
+        { name: "BBC News YouTube", country: "UK", flag: "🇬🇧", videoId: "dQw4w9WgXcQ", embedUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=0", category: "world" },
+        { name: "Sky News YouTube", country: "UK", flag: "🇬🇧", embedUrl: "https://www.youtube.com/embed/9B7s0LvqWpA?autoplay=0", category: "world" },
+        { name: "France 24 English", country: "France", flag: "🇫🇷", embedUrl: "https://www.youtube.com/embed/5e2qVq8y1Uk?autoplay=0", category: "world" },
+        { name: "DW News", country: "Germany", flag: "🇩🇪", embedUrl: "https://www.youtube.com/embed/Rj6Yg8nXkY?autoplay=0", category: "world" },
+        { name: "Al Jazeera English", country: "Qatar", flag: "🇶🇦", embedUrl: "https://www.youtube.com/embed/6E3k5Zq2jQ?autoplay=0", category: "world" }
     ];
 
     // Text Sources
@@ -170,17 +162,16 @@
     let allItems = [];
     let activeCategory = "all", activeMedia = "all", activeCountry = "all", searchQuery = "";
     let chartInstance = null;
-    let activeModal = null;
 
     function buildDatabase() {
         let items = [], id = 1;
         // TV Channels
         TV_CHANNELS_DATA.forEach(tv => {
-            items.push({ id: `tv_${id++}`, title: `🔴 LIVE: ${tv.name} (${tv.country})`, description: `Watch ${tv.name} live stream. Breaking news, analysis, and global coverage. Click play to watch in modal.`, category: tv.category, mediaType: "tv", url: tv.streamUrl, embedUrl: tv.embedUrl, source: tv.name, country: tv.country, flag: tv.flag, date: new Date().toISOString() });
+            items.push({ id: `tv_${id++}`, title: `🔴 LIVE: ${tv.name} (${tv.country})`, description: `Watch ${tv.name} live stream. Breaking news, analysis, and global coverage. Click the play button to watch in-place.`, category: tv.category, mediaType: "tv", url: tv.streamUrl, embedUrl: tv.embedUrl, source: tv.name, country: tv.country, flag: tv.flag, date: new Date().toISOString() });
         });
         // Video News
         VIDEO_NEWS.forEach(vid => {
-            items.push({ id: `video_${id++}`, title: `🎬 ${vid.name} — Latest Video News`, description: `Watch the latest video reports, interviews and breaking news coverage from ${vid.name}.`, category: "world", mediaType: "video", url: vid.url, embedUrl: vid.embedUrl || `https://www.youtube.com/embed/?list=UU${vid.channelId || ''}`, source: vid.name, country: vid.country, flag: vid.flag, date: new Date(Date.now() - Math.random()*86400000).toISOString() });
+            items.push({ id: `video_${id++}`, title: `🎬 ${vid.name} — Latest Video News`, description: `Watch the latest video reports, interviews and breaking news coverage from ${vid.name}. Click play to watch directly.`, category: "world", mediaType: "video", url: vid.embedUrl, embedUrl: vid.embedUrl, source: vid.name, country: vid.country, flag: vid.flag, date: new Date(Date.now() - Math.random()*86400000).toISOString() });
         });
         // Text Sources
         TEXT_SOURCES.forEach(txt => {
@@ -193,43 +184,34 @@
 
     allItems = buildDatabase();
 
-    // Helper: Get preview iframe HTML (for live TV and video)
-    function getPreviewHtml(item) {
-        if (item.mediaType === 'tv' && item.embedUrl) {
-            // For live TV, embed the page - most news sites allow embedding their live player
-            return `<iframe src="${item.embedUrl}" frameborder="0" allowfullscreen style="width:100%; height:100%; pointer-events:none;" title="${item.source} preview" sandbox="allow-same-origin allow-scripts allow-popups allow-forms"></iframe>`;
+    // Function to replace placeholder with actual player (in-place, no modal)
+    function activateInPlacePlayer(container, item) {
+        if (!container || container.querySelector('iframe')) return;
+        
+        const liveTag = container.querySelector('.live-tag');
+        let playerHtml = '';
+        
+        if (item.mediaType === 'tv') {
+            // For live TV: embed the live stream page in an iframe
+            playerHtml = `<iframe src="${item.embedUrl}" frameborder="0" allowfullscreen allow="autoplay; encrypted-media" style="width:100%; height:100%;" title="${item.source} Live Stream"></iframe>`;
         } else if (item.mediaType === 'video') {
-            // For YouTube videos, use a preview thumbnail or lightweight embed
-            return `<div style="background: linear-gradient(145deg, #1a1a2e, #16213e); height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; color:white;"><i class="fab fa-youtube" style="font-size:48px; color:#ff0000;"></i><span style="margin-top:8px; font-size:12px;">${item.source}</span></div>`;
+            // For video news: embed YouTube or video player
+            playerHtml = `<iframe src="${item.embedUrl}" frameborder="0" allowfullscreen allow="autoplay; encrypted-media" style="width:100%; height:100%;" title="${item.source} Video"></iframe>`;
         }
-        return `<div style="background: #1e2a3a; height:100%; display:flex; align-items:center; justify-content:center; color:white;"><i class="fas fa-tv" style="font-size:48px;"></i></div>`;
-    }
-
-    // Open full modal with embedded stream (NO DOWNLOAD)
-    function openStreamModal(item) {
-        if (activeModal) document.body.removeChild(activeModal);
-        const modal = document.createElement('div');
-        modal.className = 'modal-preview';
-        let embedSrc = item.embedUrl || item.url;
-        // For YouTube videos, convert to embed URL if needed
-        if (item.mediaType === 'video' && item.url && item.url.includes('youtube.com/@')) {
-            embedSrc = `https://www.youtube.com/embed/?list=UU${item.source.replace(/\s/g, '')}`;
+        
+        // Clear container and add iframe
+        container.innerHTML = playerHtml;
+        // Re-add live tag if needed (for TV)
+        if (item.mediaType === 'tv' && liveTag) {
+            const newLiveTag = document.createElement('div');
+            newLiveTag.className = 'live-tag';
+            newLiveTag.innerHTML = '<i class="fas fa-circle"></i> LIVE';
+            container.appendChild(newLiveTag);
         }
-        modal.innerHTML = `
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3><i class="fas fa-${item.mediaType === 'tv' ? 'tv' : 'video'}"></i> ${item.source} — ${item.mediaType === 'tv' ? 'LIVE STREAM' : 'VIDEO PLAYER'}</h3>
-                    <button class="modal-close">&times;</button>
-                </div>
-                <div class="modal-video">
-                    <iframe src="${embedSrc}" frameborder="0" allowfullscreen allow="autoplay; encrypted-media; picture-in-picture" style="width:100%; height:100%;"></iframe>
-                </div>
-            </div>
-        `;
-        modal.querySelector('.modal-close').addEventListener('click', () => { document.body.removeChild(modal); activeModal = null; });
-        modal.addEventListener('click', (e) => { if (e.target === modal) { document.body.removeChild(modal); activeModal = null; } });
-        document.body.appendChild(modal);
-        activeModal = modal;
+        
+        // Add to history
+        addToHistory({ title: item.title, url: item.url, source: item.source });
+        showToast(`Now playing: ${item.source}`);
     }
 
     function updateStats() {
@@ -249,9 +231,19 @@
     function renderTV() {
         const tvItems = allItems.filter(i=>i.mediaType==='tv').slice(0,24);
         const container = document.getElementById('tvGlobalList');
-        container.innerHTML = tvItems.map(t => `<div class="tv-channel" data-url="${t.url}" data-name="${t.source}" data-item-id="${t.id}"><i class="fas fa-tv preview-icon"></i><div><strong>${t.source}</strong><br><small>${t.flag} ${t.country}</small></div><i class="fas fa-play-circle" style="color:#cc0000; margin-left:auto;"></i></div>`).join('');
+        container.innerHTML = tvItems.map(t => `<div class="tv-channel" data-item-id="${t.id}"><i class="fas fa-tv preview-icon"></i><div><strong>${t.source}</strong><br><small>${t.flag} ${t.country}</small></div><i class="fas fa-play-circle" style="color:#cc0000; margin-left:auto;"></i></div>`).join('');
         document.querySelectorAll('.tv-channel').forEach(el => {
-            el.addEventListener('click', (e) => { e.stopPropagation(); const itemId = el.getAttribute('data-item-id'); const item = allItems.find(i => i.id == itemId); if (item) { openStreamModal(item); addToHistory({ title: `📺 ${item.source}`, url: item.url }); showToast(`Opening ${item.source} stream`); } });
+            el.addEventListener('click', (e) => { e.stopPropagation(); const itemId = el.getAttribute('data-item-id'); const item = allItems.find(i => i.id == itemId); if (item) { 
+                // Find the corresponding card and activate its player
+                const card = document.querySelector(`.news-card[data-item-id="${itemId}"]`);
+                if (card) {
+                    const playerContainer = card.querySelector('.video-player-container');
+                    if (playerContainer) activateInPlacePlayer(playerContainer, item);
+                } else {
+                    window.open(item.url, '_blank');
+                    addToHistory({ title: item.title, url: item.url });
+                }
+            } });
         });
     }
 
@@ -274,15 +266,21 @@
         container.innerHTML = filtered.map(n => {
             let mediaHtml = '';
             if (n.mediaType === 'tv') {
-                mediaHtml = `<div class="video-preview-container" data-item-id="${n.id}">
+                mediaHtml = `<div class="video-player-container" data-item-id="${n.id}" data-playing="false">
                     <div class="live-tag"><i class="fas fa-circle"></i> LIVE</div>
-                    ${getPreviewHtml(n)}
-                    <div class="video-preview-overlay"><div class="play-icon"><i class="fas fa-play"></i></div></div>
+                    <div class="video-placeholder" style="height:200px; display:flex; flex-direction:column; align-items:center; justify-content:center; background:linear-gradient(145deg,#1a1a2e,#16213e); cursor:pointer;">
+                        <i class="fas fa-tv" style="font-size:48px; color:#cc0000;"></i>
+                        <span style="margin-top:8px;">▶ Click to Watch Live</span>
+                        <span style="font-size:11px; margin-top:4px;">${n.source}</span>
+                    </div>
                 </div>`;
             } else if (n.mediaType === 'video') {
-                mediaHtml = `<div class="video-preview-container" data-item-id="${n.id}">
-                    <div style="background: linear-gradient(145deg, #1a1a2e, #16213e); height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; color:white;"><i class="fab fa-youtube" style="font-size:48px; color:#ff0000;"></i><span style="margin-top:8px;">Click to Watch</span></div>
-                    <div class="video-preview-overlay"><div class="play-icon"><i class="fas fa-play"></i></div></div>
+                mediaHtml = `<div class="video-player-container" data-item-id="${n.id}" data-playing="false">
+                    <div class="video-placeholder" style="height:200px; display:flex; flex-direction:column; align-items:center; justify-content:center; background:linear-gradient(145deg,#1a1a2e,#16213e); cursor:pointer;">
+                        <i class="fab fa-youtube" style="font-size:48px; color:#ff0000;"></i>
+                        <span style="margin-top:8px;">▶ Click to Watch Video</span>
+                        <span style="font-size:11px; margin-top:4px;">${n.source}</span>
+                    </div>
                 </div>`;
             } else {
                 mediaHtml = `<img class="card-media" src="https://picsum.photos/id/${Math.floor(Math.random()*200)+40}/500/280" loading="lazy">`;
@@ -300,26 +298,37 @@
             </div>`;
         }).join('');
         
-        // Attach event listeners - NO DOWNLOAD, ONLY MODAL
+        // Attach event listeners for in-place playback
         document.querySelectorAll('.news-card').forEach(card => {
             const mediaType = card.getAttribute('data-media-type');
             const itemId = card.getAttribute('data-item-id');
             const item = allItems.find(i => i.id == itemId);
             
-            // Handle card click for text news (open in new tab)
-            card.addEventListener('click', (e) => {
-                if (!e.target.closest('.bookmark-icon') && !e.target.closest('.play-icon') && !e.target.closest('.video-preview-container')) {
-                    if (mediaType === 'text' && item) { window.open(item.url, '_blank'); addToHistory({ title: item.title, url: item.url }); showToast("Opening article"); }
-                }
-            });
+            // Handle text news clicks (open in new tab)
+            if (mediaType === 'text') {
+                card.addEventListener('click', (e) => {
+                    if (!e.target.closest('.bookmark-icon') && item) {
+                        window.open(item.url, '_blank');
+                        addToHistory({ title: item.title, url: item.url });
+                        showToast("Opening article");
+                    }
+                });
+            }
             
-            // Handle video preview click - open modal
-            const previewContainer = card.querySelector('.video-preview-container');
-            if (previewContainer && (mediaType === 'tv' || mediaType === 'video')) {
-                const playBtn = previewContainer.querySelector('.play-icon');
-                const openModal = () => { if (item) { openStreamModal(item); addToHistory({ title: item.title, url: item.url }); showToast(`Opening ${item.source}`); } };
-                if (playBtn) playBtn.addEventListener('click', (e) => { e.stopPropagation(); openModal(); });
-                previewContainer.addEventListener('click', (e) => { e.stopPropagation(); openModal(); });
+            // Handle video/tv in-place playback
+            if (mediaType === 'tv' || mediaType === 'video') {
+                const playerContainer = card.querySelector('.video-player-container');
+                if (playerContainer) {
+                    const placeholder = playerContainer.querySelector('.video-placeholder');
+                    if (placeholder) {
+                        placeholder.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            if (item && !playerContainer.querySelector('iframe')) {
+                                activateInPlacePlayer(playerContainer, item);
+                            }
+                        });
+                    }
+                }
             }
             
             // Bookmark button
