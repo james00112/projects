@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>WorldView | In-Place Video & Live TV Previews — No Modals</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400&display=swap" rel="stylesheet">
+    <title>WorldView | In-Place Previews + Original Links</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,600;0,700;0,900;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
@@ -32,7 +32,7 @@
         .country-chip { background: #f8fafc; padding: 6px 20px; font-size: 0.8rem; font-weight: 500; white-space: nowrap; cursor: pointer; border: 1px solid #e2e8f0; transition: 0.2s; }
         .country-chip.active { background: #cc0000; color: white; border-color: #cc0000; }
         .news-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 28px; margin-bottom: 40px; }
-        .news-card { background: white; overflow: hidden; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.08); border: 1px solid #eef2f6; transition: 0.25s; position: relative; }
+        .news-card { background: white; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); border: 1px solid #eef2f6; transition: 0.25s; position: relative; }
         .news-card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.08); border-color: #cc000030; }
         .card-media { width: 100%; height: 200px; object-fit: cover; background: #eef2f6; }
         .video-player-container { position: relative; width: 100%; height: 200px; background: #0a0a0a; overflow: hidden; }
@@ -46,13 +46,13 @@
         @keyframes pulseRed { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
         .bookmark-icon { position: absolute; top: 12px; right: 12px; background: rgba(255,255,255,0.95); width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10; color: #8a9bb0; box-shadow: 0 1px 3px rgba(0,0,0,0.1); transition: 0.2s; }
         .bookmark-icon.bookmarked { color: #cc0000; }
-        .card-content { padding: 20px; }
-        .card-badges { display: flex; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
+        .card-content { padding: 20px; cursor: pointer; }
+        .card-badges { display: flex; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; pointer-events: none; }
         .badge-country { font-size: 0.7rem; font-weight: 600; color: #cc0000; text-transform: uppercase; }
         .badge-type { font-size: 0.7rem; font-weight: 500; color: #5a6874; background: #f1f5f9; padding: 2px 8px; border-radius: 4px; }
         .card-title { font-size: 1.2rem; font-weight: 700; line-height: 1.35; margin-bottom: 12px; color: #1a2c3e; }
         .card-desc { font-size: 0.85rem; color: #4a5a6a; line-height: 1.5; margin-bottom: 16px; }
-        .card-footer { display: flex; justify-content: space-between; font-size: 0.7rem; color: #8a9bb0; border-top: 1px solid #eef2f6; padding-top: 14px; }
+        .card-footer { display: flex; justify-content: space-between; font-size: 0.7rem; color: #8a9bb0; border-top: 1px solid #eef2f6; padding-top: 14px; pointer-events: none; }
         .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 28px; margin: 32px 0; }
         .dashboard-card { background: white; padding: 20px; border: 1px solid #eef2f6; }
         .dashboard-card h3 { font-size: 1.1rem; font-weight: 700; border-left: 4px solid #cc0000; padding-left: 12px; margin-bottom: 16px; }
@@ -72,8 +72,6 @@
         footer { text-align: center; margin-top: 48px; padding: 24px; font-size: 0.75rem; color: #8a9bb0; border-top: 1px solid #e2e8f0; }
         @media (max-width: 640px) { #app { padding: 0 16px 16px; } .news-grid { grid-template-columns: 1fr; } }
         .loader { text-align: center; padding: 60px; color: #5a6874; }
-        .watch-button { background: #cc0000; color: white; border: none; padding: 8px 16px; border-radius: 30px; font-size: 0.75rem; font-weight: 600; cursor: pointer; margin-top: 8px; transition: 0.2s; }
-        .watch-button:hover { background: #ff1a1a; transform: scale(1.02); }
     </style>
 </head>
 <body>
@@ -107,16 +105,16 @@
     </div>
     <div class="bookmarks-section"><div class="section-header"><h3><i class="fas fa-bookmark"></i> SAVED STORIES</h3><button id="clearBookmarksBtn" class="clear-btn">CLEAR ALL</button></div><div id="bookmarksList" class="bookmarks-list"></div></div>
     <div class="history-section"><div class="section-header"><h3><i class="fas fa-history"></i> RECENTLY VIEWED</h3><button id="clearHistoryBtn" class="clear-btn">CLEAR</button></div><div id="historyList" class="history-list"></div></div>
-    <footer>© WORLDVIEW — Click PLAY on any video or live TV to watch directly in-place. No popups, no modals. Streams play right where they are.</footer>
+    <footer>© WORLDVIEW — Click PLAY on video/live TV to watch in-place | Click any text (title, description, footer) to open original source</footer>
 </div>
 
 <script>
-    // ================ IN-PLACE VIDEO PREVIEWS - NO MODALS, STAYS IN ORIGINAL PLACEHOLDER ================
-    const STORAGE = { history: 'worldview_inplace_history', bookmarks: 'worldview_inplace_bookmarks' };
+    // ================ IN-PLACE VIDEO PREVIEWS + TEXT CLICK REDIRECTS TO ORIGINAL LINKS ================
+    const STORAGE = { history: 'worldview_inplace_v2', bookmarks: 'worldview_bookmarks_v2' };
     
-    // Live TV Channels with embeddable stream URLs (these will play inside the card)
+    // Live TV Channels with correct embeddable stream URLs
     const TV_CHANNELS_DATA = [
-        { name: "CNN", country: "USA", flag: "🇺🇸", streamUrl: "https://www.cnn.com/world/live-news", embedUrl: "https://www.cnn.com/world/live-news", category: "world", embedType: "webpage" },
+        { name: "CNN", country: "USA", flag: "🇺🇸", streamUrl: "https://www.cnn.com/world/live-news", embedUrl: "https://www.cnn.com/world/live-news", category: "world" },
         { name: "Fox News", country: "USA", flag: "🇺🇸", streamUrl: "https://www.foxnews.com/live", embedUrl: "https://www.foxnews.com/live", category: "politics" },
         { name: "MSNBC", country: "USA", flag: "🇺🇸", streamUrl: "https://www.msnbc.com/live", embedUrl: "https://www.msnbc.com/live", category: "politics" },
         { name: "ABC News Live", country: "USA", flag: "🇺🇸", streamUrl: "https://abcnews.go.com/Live", embedUrl: "https://abcnews.go.com/Live", category: "world" },
@@ -140,12 +138,12 @@
 
     // Video News (YouTube and other video sources)
     const VIDEO_NEWS = [
-        { name: "CNN YouTube", country: "USA", flag: "🇺🇸", videoId: "S8I9n6t2o3k", embedUrl: "https://www.youtube.com/embed/S8I9n6t2o3k?autoplay=0", category: "world" },
-        { name: "BBC News YouTube", country: "UK", flag: "🇬🇧", videoId: "dQw4w9WgXcQ", embedUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=0", category: "world" },
-        { name: "Sky News YouTube", country: "UK", flag: "🇬🇧", embedUrl: "https://www.youtube.com/embed/9B7s0LvqWpA?autoplay=0", category: "world" },
-        { name: "France 24 English", country: "France", flag: "🇫🇷", embedUrl: "https://www.youtube.com/embed/5e2qVq8y1Uk?autoplay=0", category: "world" },
-        { name: "DW News", country: "Germany", flag: "🇩🇪", embedUrl: "https://www.youtube.com/embed/Rj6Yg8nXkY?autoplay=0", category: "world" },
-        { name: "Al Jazeera English", country: "Qatar", flag: "🇶🇦", embedUrl: "https://www.youtube.com/embed/6E3k5Zq2jQ?autoplay=0", category: "world" }
+        { name: "CNN YouTube", country: "USA", flag: "🇺🇸", embedUrl: "https://www.youtube.com/embed/live_stream?channel=UCSX0ZpLp7S4B9yq7z1qXj5Q", category: "world" },
+        { name: "BBC News YouTube", country: "UK", flag: "🇬🇧", embedUrl: "https://www.youtube.com/embed/live_stream?channel=UC16niRr50-MSBwiO3YDb3RA", category: "world" },
+        { name: "Sky News YouTube", country: "UK", flag: "🇬🇧", embedUrl: "https://www.youtube.com/embed/live_stream?channel=UCoMdktPbSTixAyNGwb-UYkQ", category: "world" },
+        { name: "France 24 English", country: "France", flag: "🇫🇷", embedUrl: "https://www.youtube.com/embed/live_stream?channel=UCCS3R_bPkNMKvQw3-jfss5A", category: "world" },
+        { name: "DW News", country: "Germany", flag: "🇩🇪", embedUrl: "https://www.youtube.com/embed/live_stream?channel=UCknLrEdhRCp1aegoMqRaCZg", category: "world" },
+        { name: "Al Jazeera English", country: "Qatar", flag: "🇶🇦", embedUrl: "https://www.youtube.com/embed/live_stream?channel=UCQNa5Nc6rGigZ8N3DnJowbg", category: "world" }
     ];
 
     // Text Sources
@@ -167,11 +165,11 @@
         let items = [], id = 1;
         // TV Channels
         TV_CHANNELS_DATA.forEach(tv => {
-            items.push({ id: `tv_${id++}`, title: `🔴 LIVE: ${tv.name} (${tv.country})`, description: `Watch ${tv.name} live stream. Breaking news, analysis, and global coverage. Click the play button to watch in-place.`, category: tv.category, mediaType: "tv", url: tv.streamUrl, embedUrl: tv.embedUrl, source: tv.name, country: tv.country, flag: tv.flag, date: new Date().toISOString() });
+            items.push({ id: `tv_${id++}`, title: `🔴 LIVE: ${tv.name} (${tv.country})`, description: `Watch ${tv.name} live stream. Breaking news, analysis, and global coverage. Click the play button to watch in-place. Click any text to open original source.`, category: tv.category, mediaType: "tv", url: tv.streamUrl, embedUrl: tv.embedUrl, source: tv.name, country: tv.country, flag: tv.flag, date: new Date().toISOString() });
         });
         // Video News
         VIDEO_NEWS.forEach(vid => {
-            items.push({ id: `video_${id++}`, title: `🎬 ${vid.name} — Latest Video News`, description: `Watch the latest video reports, interviews and breaking news coverage from ${vid.name}. Click play to watch directly.`, category: "world", mediaType: "video", url: vid.embedUrl, embedUrl: vid.embedUrl, source: vid.name, country: vid.country, flag: vid.flag, date: new Date(Date.now() - Math.random()*86400000).toISOString() });
+            items.push({ id: `video_${id++}`, title: `🎬 ${vid.name} — Latest Video News`, description: `Watch the latest video reports, interviews and breaking news coverage from ${vid.name}. Click play to watch directly. Click text to open original.`, category: vid.category, mediaType: "video", url: vid.embedUrl, embedUrl: vid.embedUrl, source: vid.name, country: vid.country, flag: vid.flag, date: new Date(Date.now() - Math.random()*86400000).toISOString() });
         });
         // Text Sources
         TEXT_SOURCES.forEach(txt => {
@@ -192,16 +190,12 @@
         let playerHtml = '';
         
         if (item.mediaType === 'tv') {
-            // For live TV: embed the live stream page in an iframe
             playerHtml = `<iframe src="${item.embedUrl}" frameborder="0" allowfullscreen allow="autoplay; encrypted-media" style="width:100%; height:100%;" title="${item.source} Live Stream"></iframe>`;
         } else if (item.mediaType === 'video') {
-            // For video news: embed YouTube or video player
-            playerHtml = `<iframe src="${item.embedUrl}" frameborder="0" allowfullscreen allow="autoplay; encrypted-media" style="width:100%; height:100%;" title="${item.source} Video"></iframe>`;
+            playerHtml = `<iframe src="${item.embedUrl}?autoplay=1" frameborder="0" allowfullscreen allow="autoplay; encrypted-media" style="width:100%; height:100%;" title="${item.source} Video"></iframe>`;
         }
         
-        // Clear container and add iframe
         container.innerHTML = playerHtml;
-        // Re-add live tag if needed (for TV)
         if (item.mediaType === 'tv' && liveTag) {
             const newLiveTag = document.createElement('div');
             newLiveTag.className = 'live-tag';
@@ -209,7 +203,6 @@
             container.appendChild(newLiveTag);
         }
         
-        // Add to history
         addToHistory({ title: item.title, url: item.url, source: item.source });
         showToast(`Now playing: ${item.source}`);
     }
@@ -231,19 +224,9 @@
     function renderTV() {
         const tvItems = allItems.filter(i=>i.mediaType==='tv').slice(0,24);
         const container = document.getElementById('tvGlobalList');
-        container.innerHTML = tvItems.map(t => `<div class="tv-channel" data-item-id="${t.id}"><i class="fas fa-tv preview-icon"></i><div><strong>${t.source}</strong><br><small>${t.flag} ${t.country}</small></div><i class="fas fa-play-circle" style="color:#cc0000; margin-left:auto;"></i></div>`).join('');
+        container.innerHTML = tvItems.map(t => `<div class="tv-channel" data-url="${t.url}" data-name="${t.source}" data-item-id="${t.id}"><i class="fas fa-tv preview-icon"></i><div><strong>${t.source}</strong><br><small>${t.flag} ${t.country}</small></div><i class="fas fa-play-circle" style="color:#cc0000; margin-left:auto;"></i></div>`).join('');
         document.querySelectorAll('.tv-channel').forEach(el => {
-            el.addEventListener('click', (e) => { e.stopPropagation(); const itemId = el.getAttribute('data-item-id'); const item = allItems.find(i => i.id == itemId); if (item) { 
-                // Find the corresponding card and activate its player
-                const card = document.querySelector(`.news-card[data-item-id="${itemId}"]`);
-                if (card) {
-                    const playerContainer = card.querySelector('.video-player-container');
-                    if (playerContainer) activateInPlacePlayer(playerContainer, item);
-                } else {
-                    window.open(item.url, '_blank');
-                    addToHistory({ title: item.title, url: item.url });
-                }
-            } });
+            el.addEventListener('click', (e) => { e.stopPropagation(); const url = el.getAttribute('data-url'); const name = el.getAttribute('data-name'); if(url) { window.open(url, '_blank'); addToHistory({ title: `📺 ${name}`, url: url }); showToast(`Opening ${name} in new tab`); } });
         });
     }
 
@@ -289,7 +272,7 @@
             return `<div class="news-card" data-url="${n.url}" data-title="${escapeHtml(n.title)}" data-media-type="${n.mediaType}" data-item-id="${n.id}">
                 <div class="bookmark-icon ${isBookmarked ? 'bookmarked' : ''}" data-id="${n.id}"><i class="fas fa-bookmark"></i></div>
                 ${mediaHtml}
-                <div class="card-content">
+                <div class="card-content" data-url="${n.url}">
                     <div class="card-badges"><span class="badge-country">${n.flag||'🌍'} ${n.country||'GLOBAL'}</span><span class="badge-type">${n.mediaType.toUpperCase()}</span><span class="badge-type">${n.category.toUpperCase()}</span></div>
                     <div class="card-title">${escapeHtml(n.title)}</div>
                     <div class="card-desc">${escapeHtml(n.description?.slice(0,110))}...</div>
@@ -298,30 +281,40 @@
             </div>`;
         }).join('');
         
-        // Attach event listeners for in-place playback
+        // Attach event listeners
         document.querySelectorAll('.news-card').forEach(card => {
             const mediaType = card.getAttribute('data-media-type');
             const itemId = card.getAttribute('data-item-id');
             const item = allItems.find(i => i.id == itemId);
+            const originalUrl = card.getAttribute('data-url');
             
-            // Handle text news clicks (open in new tab)
-            if (mediaType === 'text') {
-                card.addEventListener('click', (e) => {
-                    if (!e.target.closest('.bookmark-icon') && item) {
-                        window.open(item.url, '_blank');
-                        addToHistory({ title: item.title, url: item.url });
-                        showToast("Opening article");
+            // CRITICAL: Make entire card content area (text) redirect to original source
+            const cardContent = card.querySelector('.card-content');
+            if (cardContent && originalUrl) {
+                // Remove any existing listeners to avoid duplicates
+                const newCardContent = cardContent.cloneNode(true);
+                cardContent.parentNode.replaceChild(newCardContent, cardContent);
+                
+                newCardContent.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (originalUrl) {
+                        window.open(originalUrl, '_blank');
+                        addToHistory({ title: item?.title || 'News', url: originalUrl });
+                        showToast("Opening original source");
                     }
                 });
             }
             
-            // Handle video/tv in-place playback
+            // Handle video/tv in-place playback (only when clicking the placeholder/play area)
             if (mediaType === 'tv' || mediaType === 'video') {
                 const playerContainer = card.querySelector('.video-player-container');
                 if (playerContainer) {
                     const placeholder = playerContainer.querySelector('.video-placeholder');
                     if (placeholder) {
-                        placeholder.addEventListener('click', (e) => {
+                        // Remove old listener and add fresh one
+                        const newPlaceholder = placeholder.cloneNode(true);
+                        placeholder.parentNode.replaceChild(newPlaceholder, placeholder);
+                        newPlaceholder.addEventListener('click', (e) => {
                             e.stopPropagation();
                             if (item && !playerContainer.querySelector('iframe')) {
                                 activateInPlacePlayer(playerContainer, item);
@@ -331,9 +324,18 @@
                 }
             }
             
-            // Bookmark button
+            // Bookmark button (preserve functionality)
             const bookmarkBtn = card.querySelector('.bookmark-icon');
-            if (bookmarkBtn) bookmarkBtn.addEventListener('click', (e) => { e.stopPropagation(); const id = bookmarkBtn.getAttribute('data-id'); const foundItem = allItems.find(i => i.id == id); if (foundItem) toggleBookmark(foundItem); });
+            if (bookmarkBtn) {
+                const newBookmarkBtn = bookmarkBtn.cloneNode(true);
+                bookmarkBtn.parentNode.replaceChild(newBookmarkBtn, bookmarkBtn);
+                newBookmarkBtn.addEventListener('click', (e) => { 
+                    e.stopPropagation(); 
+                    const id = newBookmarkBtn.getAttribute('data-id'); 
+                    const foundItem = allItems.find(i => i.id == id); 
+                    if (foundItem) toggleBookmark(foundItem); 
+                });
+            }
         });
         updateChart();
     }
